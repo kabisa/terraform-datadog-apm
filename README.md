@@ -28,7 +28,7 @@ Request rate anomaly detection is performed by taking the standard deviation and
 
 Query:
 ```terraform
-avg(${var.request_rate_evaluation_period}):anomalies(sum:trace.${var.trace_span_name}.request.hits{${local.request_rate_filter}}.as_rate(), 'basic', ${var.request_rate_anomaly_std_dev_count}, direction='both', alert_window='${var.request_rate_anomaly_trigger_window}', interval=60, count_default_zero='false') > ${var.request_rate_critical}
+avg(${var.request_rate_evaluation_period}):anomalies(sum:trace.${var.trace_span_name}.request.hits{${local.request_rate_filter}}.as_rate(), 'agile', ${var.request_rate_anomaly_std_dev_count}, direction='both', alert_window='${var.request_rate_anomaly_trigger_window}', interval=60, count_default_zero='false', seasonality='weekly') > ${var.request_rate_critical}
 ```
 
 | variable                             | default                                  | required | description                                                                       |

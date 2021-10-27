@@ -36,7 +36,7 @@ avg(${var.request_rate_evaluation_period}):anomalies(sum:trace.${var.trace_span_
 | request_rate_enabled                 | True                                     | No       |                                                                                   |
 | request_rate_warning                 | 0.15                                     | No       |                                                                                   |
 | request_rate_critical                | 0.2                                      | No       |                                                                                   |
-| request_rate_evaluation_period       | last_15m                                 | No       |                                                                                   |
+| request_rate_evaluation_period       | last_30m                                 | No       |                                                                                   |
 | request_rate_anomaly_trigger_window  | last_30m                                 | No       |                                                                                   |
 | request_rate_anomaly_recovery_window | last_15m                                 | No       |                                                                                   |
 | request_rate_note                    | ""                                       | No       |                                                                                   |

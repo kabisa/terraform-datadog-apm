@@ -6,7 +6,7 @@ locals {
 }
 
 module "apdex" {
-  source = "git@github.com:kabisa/terraform-datadog-generic-monitor.git?ref=0.6.2"
+  source = "git@github.com:kabisa/terraform-datadog-generic-monitor.git?ref=0.6.4"
 
   name  = "APM - ${title(var.trace_span_name)} - Apdex"
   query = "avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.request.apdex.by.service{${local.apdex_filter}} < ${var.apdex_critical}"

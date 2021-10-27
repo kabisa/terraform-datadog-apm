@@ -15,6 +15,9 @@ module "request_rate" {
   alert_message    = "The request_rate for service ${var.service} ({{value}}) has risen above {{threshold}}"
   recovery_message = "The request_rate for service ${var.service} ({{value}}) has recovered"
 
+  anomaly_recovery_window = var.request_rate_anomaly_recovery_window
+  anomaly_trigger_window  = var.request_rate_anomaly_trigger_window
+
   # monitor level vars
   enabled            = var.request_rate_enabled
   alerting_enabled   = var.request_rate_alerting_enabled

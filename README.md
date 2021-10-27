@@ -37,7 +37,7 @@ avg(${var.request_rate_evaluation_period}):anomalies(sum:trace.${var.trace_span_
 | request_rate_warning                 | 0.15                                     | No       |                                                                                   |
 | request_rate_critical                | 0.2                                      | No       |                                                                                   |
 | request_rate_evaluation_period       | last_15m                                 | No       |                                                                                   |
-| request_rate_anomaly_trigger_window  | last_15m                                 | No       |                                                                                   |
+| request_rate_anomaly_trigger_window  | last_30m                                 | No       |                                                                                   |
 | request_rate_anomaly_recovery_window | last_15m                                 | No       |                                                                                   |
 | request_rate_note                    | ""                                       | No       |                                                                                   |
 | request_rate_docs                    | Request rate anomaly detection is performed by taking the standard deviation and put a band around it. If X percentage of the requests are outside that band, an alert is raised. https://www.datadoghq.com/blog/introducing-anomaly-detection-datadog/ | No       |                                                                                   |

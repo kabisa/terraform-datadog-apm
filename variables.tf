@@ -55,7 +55,7 @@ variable "create_slo" {
 
 variable "slo_warning" {
   type    = number
-  default = 99
+  default = 99.95
 }
 
 variable "slo_critical" {

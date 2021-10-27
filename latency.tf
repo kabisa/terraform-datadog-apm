@@ -6,7 +6,7 @@ locals {
 }
 
 module "latency" {
-  source = "git@github.com:kabisa/terraform-datadog-generic-monitor.git?ref=0.6.2"
+  source = "git@github.com:kabisa/terraform-datadog-generic-monitor.git?ref=terraform-provider-3"
 
   name  = "APM - ${title(var.trace_span_name)} - Latency"
   query = "avg(${var.latency_evaluation_period}):avg:trace.${var.trace_span_name}.request{${local.latency_filter}} > ${var.latency_critical}"

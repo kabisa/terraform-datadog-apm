@@ -15,13 +15,13 @@ variable "request_rate_critical" {
 
 variable "request_rate_evaluation_period" {
   type    = string
-  default = "last_15m"
+  default = "last_30m"
 }
 
 
 variable "request_rate_anomaly_trigger_window" {
   type    = string
-  default = "last_15m"
+  default = "last_30m"
 }
 
 

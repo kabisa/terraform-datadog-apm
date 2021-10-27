@@ -9,10 +9,13 @@ module "request_rate" {
   source = "git@github.com:kabisa/terraform-datadog-generic-monitor.git?ref=terraform-provider-3"
 
   name  = "APM - ${title(var.trace_span_name)} - Request Rate"
-  query = "avg(${var.request_rate_evaluation_period}):anomalies(sum:trace.${var.trace_span_name}.request.hits{${local.request_rate_filter}}.as_rate(), 'basic', ${var.request_rate_anomaly_std_dev_count}, direction='both', alert_window='${var.request_rate_anomaly_trigger_window}', interval=60, count_default_zero='false') > ${var.request_rate_critical}"
+  query = "avg(${var.request_rate_evaluation_period}):anomalies(sum:trace.${var.trace_span_name}.request.hits{${local.request_rate_filter}}.as_rate(), 'agile', ${var.request_rate_anomaly_std_dev_count}, direction='both', alert_window='${var.request_rate_anomaly_trigger_window}', interval=60, count_default_zero='false', seasonality='weekly') > ${var.request_rate_critical}"
 
   alert_message    = "The request_rate for service ${var.service} ({{value}}) has risen above {{threshold}}"
   recovery_message = "The request_rate for service ${var.service} ({{value}}) has recovered"
+
+  anomaly_recovery_window = var.request_rate_anomaly_recovery_window
+  anomaly_trigger_window  = var.request_rate_anomaly_trigger_window
 
   # monitor level vars
   enabled            = var.request_rate_enabled

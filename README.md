@@ -148,7 +148,7 @@ https://docs.datadoghq.com/tracing/guide/metrics_namespace/ |
 | name_suffix          | ""       | No       |                                                                                                      |
 | locked               | True     | No       |                                                                                                      |
 | create_slo           | False    | No       |                                                                                                      |
-| slo_warning          | 99       | No       |                                                                                                      |
+| slo_warning          | 99.95    | No       |                                                                                                      |
 | slo_critical         | 99.9     | No       |                                                                                                      |
 | slo_timeframe        | 30d      | No       |                                                                                                      |
 | slo_alerting_enabled | True     | No       |                                                                                                      |

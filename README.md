@@ -9,6 +9,7 @@ Monitors:
 * [Terraform module for Datadog Apm](#terraform-module-for-datadog-apm)
   * [Request Rate](#request-rate)
   * [Error Percentage](#error-percentage)
+  * [Request Rate Anomaly](#request-rate-anomaly)
   * [Latency P95](#latency-p95)
   * [Apdex](#apdex)
   * [Latency](#latency)
@@ -24,27 +25,24 @@ Steps:
 
 ## Request Rate
 
-Request rate anomaly detection is performed by taking the standard deviation and put a band around it. If X percentage of the requests are outside that band, an alert is raised. https://www.datadoghq.com/blog/introducing-anomaly-detection-datadog/
+Number of requests per second
 
 Query:
 ```terraform
-avg(${var.request_rate_evaluation_period}):anomalies(sum:trace.${var.trace_span_name}.request.hits{${local.request_rate_filter}}.as_rate(), 'agile', ${var.request_rate_anomaly_std_dev_count}, direction='both', alert_window='${var.request_rate_anomaly_trigger_window}', interval=60, count_default_zero='false', seasonality='weekly') > ${var.request_rate_critical}
+avg(${var.request_rate_evaluation_period}):sum:trace.servlet.request.hits{${local.request_rate_filter}}.as_rate() > ${var.request_rate_critical}
 ```
 
-| variable                             | default                                  | required | description                                                                       |
-|--------------------------------------|------------------------------------------|----------|-----------------------------------------------------------------------------------|
-| request_rate_enabled                 | True                                     | No       |                                                                                   |
-| request_rate_warning                 | 0.15                                     | No       |                                                                                   |
-| request_rate_critical                | 0.2                                      | No       |                                                                                   |
-| request_rate_evaluation_period       | last_30m                                 | No       |                                                                                   |
-| request_rate_anomaly_trigger_window  | last_30m                                 | No       |                                                                                   |
-| request_rate_anomaly_recovery_window | last_15m                                 | No       |                                                                                   |
-| request_rate_note                    | ""                                       | No       |                                                                                   |
-| request_rate_docs                    | Request rate anomaly detection is performed by taking the standard deviation and put a band around it. If X percentage of the requests are outside that band, an alert is raised. https://www.datadoghq.com/blog/introducing-anomaly-detection-datadog/ | No       |                                                                                   |
-| request_rate_filter_override         | ""                                       | No       |                                                                                   |
-| request_rate_alerting_enabled        | True                                     | No       |                                                                                   |
-| request_rate_priority                | 3                                        | No       | Number from 1 (high) to 5 (low).                                                  |
-| request_rate_anomaly_std_dev_count   | 5                                        | No       | Request rate anomaly, how many standard deviations are needed to trigger an alert |
+| variable                       | default                       | required | description                      |
+|--------------------------------|-------------------------------|----------|----------------------------------|
+| request_rate_enabled           | True                          | No       |                                  |
+| request_rate_warning           | null                          | No       |                                  |
+| request_rate_critical          |                               | Yes      |                                  |
+| request_rate_evaluation_period | last_30m                      | No       |                                  |
+| request_rate_note              | ""                            | No       |                                  |
+| request_rate_docs              | Number of requests per second | No       |                                  |
+| request_rate_filter_override   | ""                            | No       |                                  |
+| request_rate_alerting_enabled  | True                          | No       |                                  |
+| request_rate_priority          | 3                             | No       | Number from 1 (high) to 5 (low). |
 
 
 ## Error Percentage
@@ -65,6 +63,31 @@ avg(${var.error_percentage_evaluation_period}):100 * (sum:trace.${var.trace_span
 | error_percentage_filter_override   | ""       | No       |                                  |
 | error_percentage_alerting_enabled  | True     | No       |                                  |
 | error_percentage_priority          | 3        | No       | Number from 1 (high) to 5 (low). |
+
+
+## Request Rate Anomaly
+
+Request rate anomaly detection is performed by taking the standard deviation and put a band around it. If X percentage of the requests are outside that band, an alert is raised. https://www.datadoghq.com/blog/introducing-anomaly-detection-datadog/
+
+Query:
+```terraform
+avg(${var.request_rate_anomaly_evaluation_period}):anomalies(sum:trace.${var.trace_span_name}.request.hits{${local.request_rate_anomaly_filter}}.as_rate(), 'agile', ${var.request_rate_anomaly_std_dev_count}, direction='both', alert_window='${var.request_rate_anomaly_trigger_window}', interval=60, count_default_zero='false', seasonality='weekly') > ${var.request_rate_anomaly_critical}
+```
+
+| variable                               | default                                  | required | description                                                                       |
+|----------------------------------------|------------------------------------------|----------|-----------------------------------------------------------------------------------|
+| request_rate_anomaly_enabled           | False                                    | No       |                                                                                   |
+| request_rate_anomaly_warning           | 0.15                                     | No       |                                                                                   |
+| request_rate_anomaly_critical          | 0.2                                      | No       |                                                                                   |
+| request_rate_anomaly_evaluation_period | last_30m                                 | No       |                                                                                   |
+| request_rate_anomaly_trigger_window    | last_30m                                 | No       |                                                                                   |
+| request_rate_anomaly_recovery_window   | last_15m                                 | No       |                                                                                   |
+| request_rate_anomaly_note              | ""                                       | No       |                                                                                   |
+| request_rate_anomaly_docs              | Request rate anomaly detection is performed by taking the standard deviation and put a band around it. If X percentage of the requests are outside that band, an alert is raised. https://www.datadoghq.com/blog/introducing-anomaly-detection-datadog/ | No       |                                                                                   |
+| request_rate_anomaly_filter_override   | ""                                       | No       |                                                                                   |
+| request_rate_anomaly_alerting_enabled  | True                                     | No       |                                                                                   |
+| request_rate_anomaly_priority          | 3                                        | No       | Number from 1 (high) to 5 (low).                                                  |
+| request_rate_anomaly_std_dev_count     | 5                                        | No       | Request rate anomaly, how many standard deviations are needed to trigger an alert |
 
 
 ## Latency P95

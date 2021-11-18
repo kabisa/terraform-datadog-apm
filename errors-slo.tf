@@ -13,9 +13,9 @@ resource "datadog_service_level_objective" "error_slo" {
   description = "Errors SLO for ${var.service}"
 
   thresholds {
-    timeframe = var.error_slo_timeframe
-    target    = var.error_slo_critical
-    warning   = var.error_slo_warning
+    timeframe = var.slo_timeframe
+    target    = var.slo_critical
+    warning   = var.slo_warning
   }
 
   query {

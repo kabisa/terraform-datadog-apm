@@ -50,12 +50,12 @@ variable "locked" {
 
 variable "create_slo" {
   type    = bool
-  default = false
+  default = true
 }
 
 variable "slo_warning" {
   type    = number
-  default = 99.95
+  default = null
 }
 
 variable "slo_critical" {

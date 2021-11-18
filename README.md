@@ -134,17 +134,13 @@ avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.request.apd
 
 ## Errors Slo
 
-| variable                   | default  | required | description                      |
-|----------------------------|----------|----------|----------------------------------|
-| error_slo_enabled          | True     | No       |                                  |
-| error_slo_warning          | 99.95    | No       |                                  |
-| error_slo_critical         | 99.9     | No       |                                  |
-| error_slo_timeframe        | 30d      | No       |                                  |
-| error_slo_note             | ""       | No       |                                  |
-| error_slo_docs             | ""       | No       |                                  |
-| error_slo_filter_override  | ""       | No       |                                  |
-| error_slo_alerting_enabled | True     | No       |                                  |
-| error_slo_priority         | 2        | No       | Number from 1 (high) to 5 (low). |
+| variable                   | default  | required | description  |
+|----------------------------|----------|----------|--------------|
+| error_slo_enabled          | True     | No       |              |
+| error_slo_note             | ""       | No       |              |
+| error_slo_docs             | ""       | No       |              |
+| error_slo_filter_override  | ""       | No       |              |
+| error_slo_alerting_enabled | True     | No       |              |
 
 
 ## Latency
@@ -180,8 +176,8 @@ https://docs.datadoghq.com/tracing/guide/metrics_namespace/ |
 | name_prefix                     | ""                  | No       |                                                                                                      |
 | name_suffix                     | ""                  | No       |                                                                                                      |
 | locked                          | True                | No       |                                                                                                      |
-| create_slo                      | False               | No       |                                                                                                      |
-| slo_warning                     | 99.95               | No       |                                                                                                      |
+| create_slo                      | True                | No       |                                                                                                      |
+| slo_warning                     | null                | No       |                                                                                                      |
 | slo_critical                    | 99.9                | No       |                                                                                                      |
 | slo_timeframe                   | 30d                 | No       |                                                                                                      |
 | slo_alerting_enabled            | True                | No       |                                                                                                      |

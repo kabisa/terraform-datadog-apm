@@ -76,3 +76,9 @@ variable "slo_alerting_enabled" {
   type    = bool
   default = true
 }
+
+variable "latency_excluded_resource_names" {
+  type        = list(string)
+  description = "List of resource names to exclude in latency oriented monitors or SLOs. Some requests might be batch requests"
+  default     = []
+}

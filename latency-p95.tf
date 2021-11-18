@@ -1,15 +1,9 @@
-locals {
-  latency_p95_filter = coalesce(
-    var.latency_p95_filter_override,
-    local.filter_str
-  )
-}
-
 module "latency_p95" {
   source = "git@github.com:kabisa/terraform-datadog-generic-monitor.git?ref=terraform-provider-3"
 
-  name  = "APM - ${title(var.trace_span_name)} - Latency(p95)"
-  query = "avg(${var.latency_p95_evaluation_period}):p95:trace.${var.trace_span_name}.request{${local.latency_p95_filter}} > ${var.latency_p95_critical}"
+  name = "APM - ${title(var.trace_span_name)} - Latency(p95)"
+  # using same filters as for avg latency
+  query = "avg(${var.latency_p95_evaluation_period}):p95:trace.${var.trace_span_name}.request{${local.latency_filter}} > ${var.latency_p95_critical}"
 
   alert_message    = "The latency_p95 for service ${var.service} ({{value}}) has risen above {{threshold}}"
   recovery_message = "The latency_p95 for service ${var.service} ({{value}}) has recovered"

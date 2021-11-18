@@ -95,7 +95,7 @@ avg(${var.request_rate_anomaly_evaluation_period}):anomalies(sum:trace.${var.tra
 
 Query:
 ```terraform
-avg(${var.latency_p95_evaluation_period}):p95:trace.${var.trace_span_name}.request{${local.latency_p95_filter}} > ${var.latency_p95_critical}
+avg(${var.latency_p95_evaluation_period}):p95:trace.${var.trace_span_name}.request{${local.latency_filter}} > ${var.latency_p95_critical}
 ```
 
 | variable                      | default  | required | description                      |
@@ -106,7 +106,6 @@ avg(${var.latency_p95_evaluation_period}):p95:trace.${var.trace_span_name}.reque
 | latency_p95_evaluation_period | last_10m | No       |                                  |
 | latency_p95_note              | ""       | No       |                                  |
 | latency_p95_docs              | ""       | No       |                                  |
-| latency_p95_filter_override   | ""       | No       |                                  |
 | latency_p95_alerting_enabled  | True     | No       |                                  |
 | latency_p95_priority          | 3        | No       | Number from 1 (high) to 5 (low). |
 
@@ -138,8 +137,8 @@ avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.request.apd
 | variable                   | default  | required | description                      |
 |----------------------------|----------|----------|----------------------------------|
 | error_slo_enabled          | True     | No       |                                  |
-| error_slo_warning          | 0.01     | No       |                                  |
-| error_slo_critical         | 0.05     | No       |                                  |
+| error_slo_warning          | 99.95    | No       |                                  |
+| error_slo_critical         | 99.9     | No       |                                  |
 | error_slo_timeframe        | 30d      | No       |                                  |
 | error_slo_note             | ""       | No       |                                  |
 | error_slo_docs             | ""       | No       |                                  |
@@ -149,11 +148,6 @@ avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.request.apd
 
 
 ## Latency
-
-Query:
-```terraform
-avg(${var.latency_evaluation_period}):avg:trace.${var.trace_span_name}.request{${local.latency_filter}} > ${var.latency_critical}
-```
 
 | variable                  | default  | required | description                      |
 |---------------------------|----------|----------|----------------------------------|
@@ -170,26 +164,27 @@ avg(${var.latency_evaluation_period}):avg:trace.${var.trace_span_name}.request{$
 
 ## Module Variables
 
-| variable             | default  | required | description                                                                                          |
-|----------------------|----------|----------|------------------------------------------------------------------------------------------------------|
-| env                  |          | Yes      |                                                                                                      |
-| alert_env            |          | Yes      |                                                                                                      |
-| service              |          | Yes      |                                                                                                      |
-| trace_span_name      | http     | No       | Traces contain a span name. Example:
+| variable                        | default  | required | description                                                                                          |
+|---------------------------------|----------|----------|------------------------------------------------------------------------------------------------------|
+| env                             |          | Yes      |                                                                                                      |
+| alert_env                       |          | Yes      |                                                                                                      |
+| service                         |          | Yes      |                                                                                                      |
+| trace_span_name                 | http     | No       | Traces contain a span name. Example:
   trace.<SPAN_NAME>.<METRIC_SUFFIX>
   trace.<SPAN_NAME>.<METRIC_SUFFIX>.<2ND_PRIM_TAG>_service
 
 The name of the operation or span.name (examples: redis.command, pylons.request, rails.request, mysql.query
 https://docs.datadoghq.com/tracing/guide/metrics_namespace/ |
-| notification_channel |          | Yes      |                                                                                                      |
-| additional_tags      | []       | No       |                                                                                                      |
-| name_prefix          | ""       | No       |                                                                                                      |
-| name_suffix          | ""       | No       |                                                                                                      |
-| locked               | True     | No       |                                                                                                      |
-| create_slo           | False    | No       |                                                                                                      |
-| slo_warning          | 99.95    | No       |                                                                                                      |
-| slo_critical         | 99.9     | No       |                                                                                                      |
-| slo_timeframe        | 30d      | No       |                                                                                                      |
-| slo_alerting_enabled | True     | No       |                                                                                                      |
+| notification_channel            |          | Yes      |                                                                                                      |
+| additional_tags                 | []       | No       |                                                                                                      |
+| name_prefix                     | ""       | No       |                                                                                                      |
+| name_suffix                     | ""       | No       |                                                                                                      |
+| locked                          | True     | No       |                                                                                                      |
+| create_slo                      | False    | No       |                                                                                                      |
+| slo_warning                     | 99.95    | No       |                                                                                                      |
+| slo_critical                    | 99.9     | No       |                                                                                                      |
+| slo_timeframe                   | 30d      | No       |                                                                                                      |
+| slo_alerting_enabled            | True     | No       |                                                                                                      |
+| latency_excluded_resource_names | []       | No       | List of resource names to exclude in latency oriented monitors or SLOs. Some requests might be batch requests |
 
 

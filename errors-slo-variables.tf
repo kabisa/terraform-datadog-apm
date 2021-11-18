@@ -5,12 +5,12 @@ variable "error_slo_enabled" {
 
 variable "error_slo_warning" {
   type    = number
-  default = 0.01
+  default = 99.95
 }
 
 variable "error_slo_critical" {
   type    = number
-  default = 0.05
+  default = 99.9
 }
 
 variable "error_slo_timeframe" {

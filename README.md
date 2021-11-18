@@ -164,28 +164,29 @@ avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.request.apd
 
 ## Module Variables
 
-| variable                        | default  | required | description                                                                                          |
-|---------------------------------|----------|----------|------------------------------------------------------------------------------------------------------|
-| env                             |          | Yes      |                                                                                                      |
-| alert_env                       |          | Yes      |                                                                                                      |
-| service                         |          | Yes      |                                                                                                      |
-| trace_span_name                 | http     | No       | Traces contain a span name. Example:
+| variable                        | default             | required | description                                                                                          |
+|---------------------------------|---------------------|----------|------------------------------------------------------------------------------------------------------|
+| env                             |                     | Yes      |                                                                                                      |
+| alert_env                       |                     | Yes      |                                                                                                      |
+| service                         |                     | Yes      |                                                                                                      |
+| trace_span_name                 | http                | No       | Traces contain a span name. Example:
   trace.<SPAN_NAME>.<METRIC_SUFFIX>
   trace.<SPAN_NAME>.<METRIC_SUFFIX>.<2ND_PRIM_TAG>_service
 
 The name of the operation or span.name (examples: redis.command, pylons.request, rails.request, mysql.query
 https://docs.datadoghq.com/tracing/guide/metrics_namespace/ |
-| notification_channel            |          | Yes      |                                                                                                      |
-| additional_tags                 | []       | No       |                                                                                                      |
-| name_prefix                     | ""       | No       |                                                                                                      |
-| name_suffix                     | ""       | No       |                                                                                                      |
-| locked                          | True     | No       |                                                                                                      |
-| create_slo                      | False    | No       |                                                                                                      |
-| slo_warning                     | 99.95    | No       |                                                                                                      |
-| slo_critical                    | 99.9     | No       |                                                                                                      |
-| slo_timeframe                   | 30d      | No       |                                                                                                      |
-| slo_alerting_enabled            | True     | No       |                                                                                                      |
-| latency_excluded_resource_names | []       | No       | List of resource names to exclude in latency oriented monitors or SLOs. Some requests might be batch requests |
-| filters_str_override            | null     | No       |                                                                                                      |
+| notification_channel            |                     | Yes      |                                                                                                      |
+| additional_tags                 | []                  | No       |                                                                                                      |
+| name_prefix                     | ""                  | No       |                                                                                                      |
+| name_suffix                     | ""                  | No       |                                                                                                      |
+| locked                          | True                | No       |                                                                                                      |
+| create_slo                      | False               | No       |                                                                                                      |
+| slo_warning                     | 99.95               | No       |                                                                                                      |
+| slo_critical                    | 99.9                | No       |                                                                                                      |
+| slo_timeframe                   | 30d                 | No       |                                                                                                      |
+| slo_alerting_enabled            | True                | No       |                                                                                                      |
+| latency_excluded_resource_names | []                  | No       | List of resource names to exclude in latency oriented monitors or SLOs. Some requests might be batch requests |
+| filters_str_override            | null                | No       |                                                                                                      |
+| error_slo_error_filter          | http.status_code:5* | No       | Filter string to select the errors for the error SLO                                                 |
 
 

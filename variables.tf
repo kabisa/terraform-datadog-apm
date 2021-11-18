@@ -87,3 +87,9 @@ variable "filters_str_override" {
   type    = string
   default = null
 }
+
+variable "error_slo_error_filter" {
+  type        = string
+  description = "Filter string to select the errors for the error SLO"
+  default     = "http.status_code:5*"
+}

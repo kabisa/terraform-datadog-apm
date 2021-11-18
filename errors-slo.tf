@@ -20,7 +20,7 @@ resource "datadog_service_level_objective" "error_slo" {
 
   query {
     denominator = "sum:trace.${var.trace_span_name}.request.hits{${local.error_slo_filter}}.as_count()"
-    numerator   = "sum:trace.${var.trace_span_name}.request.hits.by_http_status{${local.error_slo_filter}}.as_count() - sum:trace.${var.trace_span_name}.request.hits.by_http_status{${local.error_slo_filter},${var.error_slo_error_filter}}.as_count()"
+    numerator   = "sum:trace.${var.trace_span_name}.request.hits{${local.error_slo_filter}}.as_count() - sum:trace.${var.trace_span_name}.request.hits{${local.error_slo_filter},${var.error_slo_error_filter}}.as_count()"
   }
 
   tags = local.normalized_tags

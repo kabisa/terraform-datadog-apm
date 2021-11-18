@@ -1,5 +1,5 @@
 locals {
-  latency_exclusion_str  = join(",", [for exclusion in var.latency_excluded_resource_names : "!${exclusion}"])
+  latency_exclusion_str  = join(",", [for exclusion in var.latency_excluded_resource_names : "!resource_name:${exclusion}"])
   default_latency_filter = local.latency_exclusion_str != "" ? "${local.filter_str},${local.latency_exclusion_str}" : local.filter_str
   # Override takes precedence
   latency_filter = coalesce(

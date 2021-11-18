@@ -121,7 +121,7 @@ avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.request.apd
 
 | variable                | default                                  | required | description                      |
 |-------------------------|------------------------------------------|----------|----------------------------------|
-| apdex_enabled           | True                                     | No       |                                  |
+| apdex_enabled           | False                                    | No       |                                  |
 | apdex_warning           | 0.9                                      | No       |                                  |
 | apdex_critical          | 0.8                                      | No       |                                  |
 | apdex_evaluation_period | last_10m                                 | No       |                                  |

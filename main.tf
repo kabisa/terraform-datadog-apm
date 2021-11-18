@@ -58,5 +58,5 @@ locals {
       ""
     )
   ]
-  filter_str = join(",", local.normalized_filters)
+  filter_str = var.filters_str_override != null ? var.filters_str_override : join(",", local.normalized_filters)
 }

@@ -186,5 +186,6 @@ https://docs.datadoghq.com/tracing/guide/metrics_namespace/ |
 | slo_timeframe                   | 30d      | No       |                                                                                                      |
 | slo_alerting_enabled            | True     | No       |                                                                                                      |
 | latency_excluded_resource_names | []       | No       | List of resource names to exclude in latency oriented monitors or SLOs. Some requests might be batch requests |
+| filters_str_override            | null     | No       |                                                                                                      |
 
 

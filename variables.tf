@@ -82,3 +82,8 @@ variable "latency_excluded_resource_names" {
   description = "List of resource names to exclude in latency oriented monitors or SLOs. Some requests might be batch requests"
   default     = []
 }
+
+variable "filters_str_override" {
+  type    = string
+  default = null
+}

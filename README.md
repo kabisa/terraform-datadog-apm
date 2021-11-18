@@ -12,6 +12,7 @@ Monitors:
   * [Request Rate Anomaly](#request-rate-anomaly)
   * [Latency P95](#latency-p95)
   * [Apdex](#apdex)
+  * [Errors Slo](#errors-slo)
   * [Latency](#latency)
   * [Module Variables](#module-variables)
 
@@ -130,6 +131,21 @@ avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.request.apd
 | apdex_filter_override   | ""                                       | No       |                                  |
 | apdex_alerting_enabled  | True                                     | No       |                                  |
 | apdex_priority          | 3                                        | No       | Number from 1 (high) to 5 (low). |
+
+
+## Errors Slo
+
+| variable                   | default  | required | description                      |
+|----------------------------|----------|----------|----------------------------------|
+| error_slo_enabled          | True     | No       |                                  |
+| error_slo_warning          | 0.01     | No       |                                  |
+| error_slo_critical         | 0.05     | No       |                                  |
+| error_slo_timeframe        | 30d      | No       |                                  |
+| error_slo_note             | ""       | No       |                                  |
+| error_slo_docs             | ""       | No       |                                  |
+| error_slo_filter_override  | ""       | No       |                                  |
+| error_slo_alerting_enabled | True     | No       |                                  |
+| error_slo_priority         | 2        | No       | Number from 1 (high) to 5 (low). |
 
 
 ## Latency

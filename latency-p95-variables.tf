@@ -28,11 +28,6 @@ variable "latency_p95_docs" {
   default = ""
 }
 
-variable "latency_p95_filter_override" {
-  type    = string
-  default = ""
-}
-
 variable "latency_p95_alerting_enabled" {
   type    = bool
   default = true

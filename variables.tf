@@ -50,12 +50,12 @@ variable "locked" {
 
 variable "create_slo" {
   type    = bool
-  default = false
+  default = true
 }
 
 variable "slo_warning" {
   type    = number
-  default = 99.95
+  default = null
 }
 
 variable "slo_critical" {
@@ -75,4 +75,21 @@ variable "slo_timeframe" {
 variable "slo_alerting_enabled" {
   type    = bool
   default = true
+}
+
+variable "latency_excluded_resource_names" {
+  type        = list(string)
+  description = "List of resource names to exclude in latency oriented monitors or SLOs. Some requests might be batch requests"
+  default     = []
+}
+
+variable "filters_str_override" {
+  type    = string
+  default = null
+}
+
+variable "error_slo_error_filter" {
+  type        = string
+  description = "Filter string to select the errors for the error SLO, Dont forget to include the comma or (AND or OR) keywords"
+  default     = ",http.status_code:5*"
 }

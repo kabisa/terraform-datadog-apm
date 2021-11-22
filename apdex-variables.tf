@@ -1,6 +1,6 @@
 variable "apdex_enabled" {
   type    = bool
-  default = true
+  default = false
 }
 
 variable "apdex_warning" {

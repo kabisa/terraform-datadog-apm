@@ -1,9 +1,9 @@
 
 resource "datadog_service_level_objective" "slo" {
   count       = var.create_slo ? 1 : 0
-  name        = "${var.service} SLO"
+  name        = "${local.service_display_name} SLO"
   type        = "monitor"
-  description = "APM SLO for ${var.service}"
+  description = "APM SLO for ${local.service_display_name}"
   monitor_ids = concat(
     var.apdex_enabled ? [module.apdex.alert_id] : [],
     (var.error_percentage_enabled && !var.error_slo_enabled) ? [module.error_percentage.alert_id] : [],

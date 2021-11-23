@@ -6,7 +6,7 @@ locals {
 }
 
 module "request_rate" {
-  source = "git@github.com:kabisa/terraform-datadog-generic-monitor.git?ref=0.6.4"
+  source = "git@github.com:kabisa/terraform-datadog-generic-monitor.git?ref=0.6.5"
 
   name  = "APM - ${title(var.trace_span_name)} - Request Rate"
   query = "avg(${var.request_rate_evaluation_period}):sum:trace.servlet.request.hits{${local.request_rate_filter}}.as_rate() > ${var.request_rate_critical}"

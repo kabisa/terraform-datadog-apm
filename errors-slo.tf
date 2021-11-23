@@ -8,9 +8,9 @@ locals {
 
 resource "datadog_service_level_objective" "error_slo" {
   count       = var.error_slo_enabled ? 1 : 0
-  name        = "${var.service} Errors SLO"
+  name        = "${local.service_display_name} Errors SLO"
   type        = "metric"
-  description = "Errors SLO for ${var.service}"
+  description = "Errors SLO for ${local.service_display_name}"
 
   thresholds {
     timeframe = var.slo_timeframe

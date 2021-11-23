@@ -1,5 +1,5 @@
 module "latency_p95" {
-  source = "git@github.com:kabisa/terraform-datadog-generic-monitor.git?ref=0.6.4"
+  source = "git@github.com:kabisa/terraform-datadog-generic-monitor.git?ref=0.6.5"
 
   name = "APM - ${title(var.trace_span_name)} - Latency(p95)"
   # using same filters as for avg latency

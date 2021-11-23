@@ -10,6 +10,11 @@ variable "service" {
   type = string
 }
 
+variable "service_display_name" {
+  type    = string
+  default = null
+}
+
 variable "trace_span_name" {
   type    = string
   default = "http"

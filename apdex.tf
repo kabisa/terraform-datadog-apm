@@ -11,8 +11,8 @@ module "apdex" {
   name  = "APM - ${title(split(".", var.trace_span_name)[0])} - Apdex"
   query = "avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.apdex.by.service{${local.apdex_filter}} < ${var.apdex_critical}"
 
-  alert_message    = "The ${var.trace_span_name} appdex for service ${var.service} ({{value}}) has fallen below {{threshold}}"
-  recovery_message = "The ${var.trace_span_name} appdex for service ${var.service} ({{value}}) has recovered"
+  alert_message    = "The ${var.trace_span_name} appdex for service ${local.service_display_name} ({{value}}) has fallen below {{threshold}}"
+  recovery_message = "The ${var.trace_span_name} appdex for service ${local.service_display_name} ({{value}}) has recovered"
 
   # monitor level vars
   enabled            = var.apdex_enabled

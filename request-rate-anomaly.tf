@@ -11,8 +11,8 @@ module "request_rate_anomaly" {
   name  = "APM - ${title(split(".", var.trace_span_name)[0])} - Request Rate Anomaly"
   query = "avg(${var.request_rate_anomaly_evaluation_period}):anomalies(sum:trace.${var.trace_span_name}.hits{${local.request_rate_anomaly_filter}}.as_rate(), 'agile', ${var.request_rate_anomaly_std_dev_count}, direction='both', alert_window='${var.request_rate_anomaly_trigger_window}', interval=60, count_default_zero='false', seasonality='weekly') > ${var.request_rate_anomaly_critical}"
 
-  alert_message    = "The request_rate_anomaly for service ${var.service} ({{value}}) has risen above {{threshold}}"
-  recovery_message = "The request_rate_anomaly for service ${var.service} ({{value}}) has recovered"
+  alert_message    = "The request_rate_anomaly for service ${local.service_display_name} ({{value}}) has risen above {{threshold}}"
+  recovery_message = "The request_rate_anomaly for service ${local.service_display_name} ({{value}}) has recovered"
 
   anomaly_recovery_window = var.request_rate_anomaly_recovery_window
   anomaly_trigger_window  = var.request_rate_anomaly_trigger_window

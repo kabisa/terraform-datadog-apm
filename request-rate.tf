@@ -33,3 +33,19 @@ module "request_rate" {
   name_prefix          = var.name_prefix
   name_suffix          = var.name_suffix
 }
+
+resource "datadog_service_level_objective" "request_rate_slo" {
+  count       = (var.create_slo && var.request_rate_enabled) ? 1 : 0
+  name        = "${local.service_display_name} Request Rate"
+  type        = "monitor"
+  description = "APM SLO for ${local.service_display_name}"
+  monitor_ids = var.latency_enabled ? [module.request_rate.alert_id] : []
+
+  thresholds {
+    timeframe = var.slo_timeframe
+    target    = var.slo_critical
+    warning   = var.slo_warning
+  }
+
+  tags = concat(local.normalized_tags, ["slo:requestrate"])
+}

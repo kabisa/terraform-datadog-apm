@@ -28,11 +28,6 @@ Steps:
 
 Number of requests per second
 
-Query:
-```terraform
-avg(${var.request_rate_evaluation_period}):sum:trace.${var.trace_span_name}.hits{${local.request_rate_filter}}.as_rate() > ${var.request_rate_critical}
-```
-
 | variable                       | default                       | required | description                      |
 |--------------------------------|-------------------------------|----------|----------------------------------|
 | request_rate_enabled           | True                          | No       |                                  |
@@ -92,11 +87,6 @@ avg(${var.request_rate_anomaly_evaluation_period}):anomalies(sum:trace.${var.tra
 
 
 ## Latency P95
-
-Query:
-```terraform
-avg(${var.latency_p95_evaluation_period}):p95:trace.${var.trace_span_name}{${local.latency_filter}} > ${var.latency_p95_critical}
-```
 
 | variable                      | default  | required | description                      |
 |-------------------------------|----------|----------|----------------------------------|

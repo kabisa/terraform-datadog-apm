@@ -8,11 +8,11 @@ locals {
 module "request_rate" {
   source = "git@github.com:kabisa/terraform-datadog-generic-monitor.git?ref=0.6.5"
 
-  name  = "APM - ${title(var.trace_span_name)} - Request Rate"
+  name  = "APM - ${title(split(".", var.trace_span_name)[0])} - Request Rate"
   query = "avg(${var.request_rate_evaluation_period}):sum:trace.${var.trace_span_name}.hits{${local.request_rate_filter}}.as_rate() > ${var.request_rate_critical}"
 
-  alert_message    = "The request_rate for service ${var.service} ({{value}}) has risen above {{threshold}}"
-  recovery_message = "The request_rate for service ${var.service} ({{value}}) has recovered"
+  alert_message    = "The request_rate for service ${local.service_display_name} ({{value}}) has risen above {{threshold}}"
+  recovery_message = "The request_rate for service ${local.service_display_name} ({{value}}) has recovered"
 
   # monitor level vars
   enabled            = var.request_rate_enabled

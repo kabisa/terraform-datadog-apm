@@ -14,8 +14,8 @@ module "latency" {
   name  = "APM - ${title(split(".", var.trace_span_name)[0])} - Latency"
   query = "avg(${var.latency_evaluation_period}):avg:trace.${var.trace_span_name}{${local.latency_filter}} > ${var.latency_critical}"
 
-  alert_message    = "The latency for service ${var.service} ({{value}}) has risen above {{threshold}}"
-  recovery_message = "The latency for service ${var.service} ({{value}}) has recovered"
+  alert_message    = "The latency for service ${local.service_display_name} ({{value}}) has risen above {{threshold}}"
+  recovery_message = "The latency for service ${local.service_display_name} ({{value}}) has recovered"
 
   # monitor level vars
   enabled            = var.latency_enabled

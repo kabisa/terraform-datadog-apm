@@ -3,7 +3,7 @@ module "latency_p95" {
 
   name = "APM - ${title(var.trace_span_name)} - Latency(p95)"
   # using same filters as for avg latency
-  query = "avg(${var.latency_p95_evaluation_period}):p95:trace.${var.trace_span_name}.request{${local.latency_filter}} > ${var.latency_p95_critical}"
+  query = "avg(${var.latency_p95_evaluation_period}):p95:trace.${var.trace_span_name}{${local.latency_filter}} > ${var.latency_p95_critical}"
 
   alert_message    = "The latency_p95 for service ${var.service} ({{value}}) has risen above {{threshold}}"
   recovery_message = "The latency_p95 for service ${var.service} ({{value}}) has recovered"

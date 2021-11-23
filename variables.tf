@@ -17,7 +17,7 @@ variable "service_display_name" {
 
 variable "trace_span_name" {
   type    = string
-  default = "http"
+  default = "http.request"
 
   description = <<-EOT
 Traces contain a span name. Example:

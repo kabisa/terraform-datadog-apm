@@ -165,6 +165,7 @@ avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.request.apd
 | env                             |                      | Yes      |                                                                                                      |
 | alert_env                       |                      | Yes      |                                                                                                      |
 | service                         |                      | Yes      |                                                                                                      |
+| service_display_name            | null                 | No       |                                                                                                      |
 | trace_span_name                 | http                 | No       | Traces contain a span name. Example:
   trace.<SPAN_NAME>.<METRIC_SUFFIX>
   trace.<SPAN_NAME>.<METRIC_SUFFIX>.<2ND_PRIM_TAG>_service

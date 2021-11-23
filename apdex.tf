@@ -9,7 +9,7 @@ module "apdex" {
   source = "git@github.com:kabisa/terraform-datadog-generic-monitor.git?ref=terraform-provider-3"
 
   name  = "APM - ${title(var.trace_span_name)} - Apdex"
-  query = "avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.request.apdex.by.service{${local.apdex_filter}} < ${var.apdex_critical}"
+  query = "avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.apdex.by.service{${local.apdex_filter}} < ${var.apdex_critical}"
 
   alert_message    = "The ${var.trace_span_name} appdex for service ${var.service} ({{value}}) has fallen below {{threshold}}"
   recovery_message = "The ${var.trace_span_name} appdex for service ${var.service} ({{value}}) has recovered"

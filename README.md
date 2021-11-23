@@ -30,7 +30,7 @@ Number of requests per second
 
 Query:
 ```terraform
-avg(${var.request_rate_evaluation_period}):sum:trace.servlet.request.hits{${local.request_rate_filter}}.as_rate() > ${var.request_rate_critical}
+avg(${var.request_rate_evaluation_period}):sum:trace.${var.trace_span_name}.hits{${local.request_rate_filter}}.as_rate() > ${var.request_rate_critical}
 ```
 
 | variable                       | default                       | required | description                      |
@@ -50,7 +50,7 @@ avg(${var.request_rate_evaluation_period}):sum:trace.servlet.request.hits{${loca
 
 Query:
 ```terraform
-avg(${var.error_percentage_evaluation_period}):100 * (sum:trace.${var.trace_span_name}.request.errors{${local.error_percentage_filter}}.as_rate() / sum:trace.${var.trace_span_name}.request.hits{${local.error_percentage_filter}}.as_rate() ) > ${var.error_percentage_critical}
+avg(${var.error_percentage_evaluation_period}):100 * (sum:trace.${var.trace_span_name}.errors{${local.error_percentage_filter}}.as_rate() / sum:trace.${var.trace_span_name}.hits{${local.error_percentage_filter}}.as_rate() ) > ${var.error_percentage_critical}
 ```
 
 | variable                           | default  | required | description                      |
@@ -72,7 +72,7 @@ Request rate anomaly detection is performed by taking the standard deviation and
 
 Query:
 ```terraform
-avg(${var.request_rate_anomaly_evaluation_period}):anomalies(sum:trace.${var.trace_span_name}.request.hits{${local.request_rate_anomaly_filter}}.as_rate(), 'agile', ${var.request_rate_anomaly_std_dev_count}, direction='both', alert_window='${var.request_rate_anomaly_trigger_window}', interval=60, count_default_zero='false', seasonality='weekly') > ${var.request_rate_anomaly_critical}
+avg(${var.request_rate_anomaly_evaluation_period}):anomalies(sum:trace.${var.trace_span_name}.hits{${local.request_rate_anomaly_filter}}.as_rate(), 'agile', ${var.request_rate_anomaly_std_dev_count}, direction='both', alert_window='${var.request_rate_anomaly_trigger_window}', interval=60, count_default_zero='false', seasonality='weekly') > ${var.request_rate_anomaly_critical}
 ```
 
 | variable                               | default                                  | required | description                                                                       |
@@ -95,7 +95,7 @@ avg(${var.request_rate_anomaly_evaluation_period}):anomalies(sum:trace.${var.tra
 
 Query:
 ```terraform
-avg(${var.latency_p95_evaluation_period}):p95:trace.${var.trace_span_name}.request{${local.latency_filter}} > ${var.latency_p95_critical}
+avg(${var.latency_p95_evaluation_period}):p95:trace.${var.trace_span_name}{${local.latency_filter}} > ${var.latency_p95_critical}
 ```
 
 | variable                      | default  | required | description                      |
@@ -116,7 +116,7 @@ avg(${var.latency_p95_evaluation_period}):p95:trace.${var.trace_span_name}.reque
 
 Query:
 ```terraform
-avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.request.apdex.by.service{${local.apdex_filter}} < ${var.apdex_critical}
+avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.apdex.by.service{${local.apdex_filter}} < ${var.apdex_critical}
 ```
 
 | variable                | default                                  | required | description                      |
@@ -166,7 +166,7 @@ avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.request.apd
 | alert_env                       |                      | Yes      |                                                                                                      |
 | service                         |                      | Yes      |                                                                                                      |
 | service_display_name            | null                 | No       |                                                                                                      |
-| trace_span_name                 | http                 | No       | Traces contain a span name. Example:
+| trace_span_name                 | http.request         | No       | Traces contain a span name. Example:
   trace.<SPAN_NAME>.<METRIC_SUFFIX>
   trace.<SPAN_NAME>.<METRIC_SUFFIX>.<2ND_PRIM_TAG>_service
 

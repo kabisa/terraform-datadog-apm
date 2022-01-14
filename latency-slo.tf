@@ -19,8 +19,8 @@ resource "datadog_service_level_objective" "latency_slo" {
   }
 
   query {
-    denominator = "sum:custom_trace.lt.${var.latency_slo_ms_bucket}ms.count{${local.latency_slo_filter}${var.latency_slo_status_ok_filter}}.as_count()"
-    numerator   = "sum:custom_trace.hits{${local.latency_slo_filter}${var.latency_slo_status_ok_filter}}.as_count()"
+    numerator   = "sum:custom_trace.lt.${var.latency_slo_ms_bucket}ms.count{${local.latency_slo_filter}${var.latency_slo_status_ok_filter}}.as_count()"
+    denominator = "sum:custom_trace.hits{${local.latency_slo_filter}${var.latency_slo_status_ok_filter}}.as_count()"
   }
 
   tags = local.normalized_tags

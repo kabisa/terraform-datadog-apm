@@ -13,9 +13,9 @@ resource "datadog_service_level_objective" "latency_slo" {
   description = "latencys SLO for ${local.service_display_name}"
 
   thresholds {
-    timeframe = var.slo_timeframe
-    target    = var.slo_critical
-    warning   = var.slo_warning
+    timeframe = var.latency_slo_timeframe
+    target    = var.latency_slo_critical
+    warning   = var.latency_slo_warning
   }
 
   query {

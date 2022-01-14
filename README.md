@@ -94,6 +94,11 @@ avg(${var.request_rate_anomaly_evaluation_period}):anomalies(sum:trace.${var.tra
 
 ## Latency P95
 
+Query:
+```terraform
+avg(${var.latency_p95_evaluation_period}):p95:trace.${var.trace_span_name}{${local.latency_filter}} > ${var.latency_p95_critical}
+```
+
 | variable                      | default  | required | description                      |
 |-------------------------------|----------|----------|----------------------------------|
 | latency_p95_enabled           | True     | No       |                                  |
@@ -114,9 +119,12 @@ avg(${var.request_rate_anomaly_evaluation_period}):anomalies(sum:trace.${var.tra
 | latency_slo_note             | ""         | No       |                                                                                                      |
 | latency_slo_docs             | ""         | No       |                                                                                                      |
 | latency_slo_filter_override  | ""         | No       |                                                                                                      |
+| latency_slo_warning          | null       | No       |                                                                                                      |
+| latency_slo_critical         | 99.9       | No       |                                                                                                      |
 | latency_slo_alerting_enabled | True       | No       |                                                                                                      |
 | latency_slo_status_ok_filter | ,status:ok | No       | Filter string to select the non-errors for the latency SLO, Dont forget to include the comma or (AND or OR) keywords |
 | latency_slo_ms_bucket        | 250        | No       | We defined several latency buckets with custom metrics based on the APM traces that come in. Our buckets are 100, 250, 500, 1000, 2500, 5000, 10000 |
+| latency_slo_timeframe        | 30d        | No       |                                                                                                      |
 
 
 ## Apdex
@@ -149,8 +157,11 @@ avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.apdex.by.se
 | error_slo_note             | ""                   | No       |                                                                                                      |
 | error_slo_docs             | ""                   | No       |                                                                                                      |
 | error_slo_filter_override  | ""                   | No       |                                                                                                      |
+| error_slo_warning          | null                 | No       |                                                                                                      |
+| error_slo_critical         | 99.9                 | No       |                                                                                                      |
 | error_slo_alerting_enabled | True                 | No       |                                                                                                      |
 | error_slo_error_filter     | ,http.status_code:5* | No       | Filter string to select the errors for the error SLO, Dont forget to include the comma or (AND or OR) keywords |
+| error_slo_timeframe        | 30d                  | No       |                                                                                                      |
 
 
 ## Latency
@@ -187,11 +198,6 @@ https://docs.datadoghq.com/tracing/guide/metrics_namespace/ |
 | name_prefix                     | ""           | No       |                                                                                                      |
 | name_suffix                     | ""           | No       |                                                                                                      |
 | locked                          | True         | No       |                                                                                                      |
-| create_slo                      | True         | No       |                                                                                                      |
-| slo_warning                     | null         | No       |                                                                                                      |
-| slo_critical                    | 99.9         | No       |                                                                                                      |
-| slo_timeframe                   | 30d          | No       |                                                                                                      |
-| slo_alerting_enabled            | True         | No       |                                                                                                      |
 | latency_excluded_resource_names | []           | No       | List of resource names to exclude in latency oriented monitors or SLOs. Some requests might be batch requests |
 | filters_str_override            | null         | No       |                                                                                                      |
 

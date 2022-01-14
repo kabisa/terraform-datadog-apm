@@ -1,7 +1,6 @@
 locals {
-  filters              = ["env:${var.env}", "service:${var.service}"]
-  notification_channel = var.slo_alerting_enabled ? var.notification_channel : ""
-  tag_specials_regex   = "/[^a-z0-9\\-_:.\\/]/"
+  filters            = ["env:${var.env}", "service:${var.service}"]
+  tag_specials_regex = "/[^a-z0-9\\-_:.\\/]/"
 
   tags = concat(
     [

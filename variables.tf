@@ -53,35 +53,6 @@ variable "locked" {
   default = true
 }
 
-variable "create_slo" {
-  type    = bool
-  default = true
-}
-
-variable "slo_warning" {
-  type    = number
-  default = null
-}
-
-variable "slo_critical" {
-  type    = number
-  default = 99.9
-}
-
-variable "slo_timeframe" {
-  validation {
-    condition     = contains(["7d", "30d", "90d"], var.slo_timeframe)
-    error_message = "SLO Timeframe can  be 7,30,90 days. Example: 7d."
-  }
-  type    = string
-  default = "30d"
-}
-
-variable "slo_alerting_enabled" {
-  type    = bool
-  default = true
-}
-
 variable "latency_excluded_resource_names" {
   type        = list(string)
   description = "List of resource names to exclude in latency oriented monitors or SLOs. Some requests might be batch requests"

@@ -8,7 +8,7 @@ locals {
 
 resource "datadog_service_level_objective" "error_slo" {
   count       = var.error_slo_enabled ? 1 : 0
-  name        = "${local.service_display_name} Error SLO"
+  name        = "${local.service_display_name} - Error SLO"
   type        = "metric"
   description = "Errors SLO for ${local.service_display_name}"
 

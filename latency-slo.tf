@@ -8,7 +8,7 @@ locals {
 
 resource "datadog_service_level_objective" "latency_slo" {
   count       = var.latency_slo_enabled ? 1 : 0
-  name        = "${local.service_display_name} latencys"
+  name        = "${local.service_display_name} Latency SLO"
   type        = "metric"
   description = "latencys SLO for ${local.service_display_name}"
 

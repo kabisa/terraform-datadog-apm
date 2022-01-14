@@ -11,6 +11,7 @@ Monitors:
   * [Error Percentage](#error-percentage)
   * [Request Rate Anomaly](#request-rate-anomaly)
   * [Latency P95](#latency-p95)
+  * [Latency Slo](#latency-slo)
   * [Apdex](#apdex)
   * [Errors Slo](#errors-slo)
   * [Latency](#latency)
@@ -27,6 +28,11 @@ Steps:
 ## Request Rate
 
 Number of requests per second
+
+Query:
+```terraform
+avg(${var.request_rate_evaluation_period}):sum:trace.${var.trace_span_name}.hits{${local.request_rate_filter}}.as_rate() > ${var.request_rate_critical}
+```
 
 | variable                       | default                       | required | description                      |
 |--------------------------------|-------------------------------|----------|----------------------------------|
@@ -100,6 +106,19 @@ avg(${var.request_rate_anomaly_evaluation_period}):anomalies(sum:trace.${var.tra
 | latency_p95_priority          | 3        | No       | Number from 1 (high) to 5 (low). |
 
 
+## Latency Slo
+
+| variable                     | default    | required | description                                                                                          |
+|------------------------------|------------|----------|------------------------------------------------------------------------------------------------------|
+| latency_slo_enabled          | False      | No       | Note that this monitor requires custom metrics to be present. Those can unfortunately not be created with Terraform yet |
+| latency_slo_note             | ""         | No       |                                                                                                      |
+| latency_slo_docs             | ""         | No       |                                                                                                      |
+| latency_slo_filter_override  | ""         | No       |                                                                                                      |
+| latency_slo_alerting_enabled | True       | No       |                                                                                                      |
+| latency_slo_status_ok_filter | ,status:ok | No       | Filter string to select the non-errors for the latency SLO, Dont forget to include the comma or (AND or OR) keywords |
+| latency_slo_ms_bucket        | 250        | No       | We defined several latency buckets with custom metrics based on the APM traces that come in. Our buckets are 100, 250, 500, 1000, 2500, 5000, 10000 |
+
+
 ## Apdex
 
     Apdex is a measure of response time based against a set threshold. It measures the ratio of satisfactory response times to unsatisfactory response times. The response time is measured from an asset request to completed delivery back to the requestor. For more see: https://en.wikipedia.org/wiki/Apdex#Apdex_method
@@ -124,13 +143,14 @@ avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.apdex.by.se
 
 ## Errors Slo
 
-| variable                   | default  | required | description  |
-|----------------------------|----------|----------|--------------|
-| error_slo_enabled          | True     | No       |              |
-| error_slo_note             | ""       | No       |              |
-| error_slo_docs             | ""       | No       |              |
-| error_slo_filter_override  | ""       | No       |              |
-| error_slo_alerting_enabled | True     | No       |              |
+| variable                   | default              | required | description                                                                                          |
+|----------------------------|----------------------|----------|------------------------------------------------------------------------------------------------------|
+| error_slo_enabled          | True                 | No       |                                                                                                      |
+| error_slo_note             | ""                   | No       |                                                                                                      |
+| error_slo_docs             | ""                   | No       |                                                                                                      |
+| error_slo_filter_override  | ""                   | No       |                                                                                                      |
+| error_slo_alerting_enabled | True                 | No       |                                                                                                      |
+| error_slo_error_filter     | ,http.status_code:5* | No       | Filter string to select the errors for the error SLO, Dont forget to include the comma or (AND or OR) keywords |
 
 
 ## Latency
@@ -150,30 +170,29 @@ avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.apdex.by.se
 
 ## Module Variables
 
-| variable                        | default              | required | description                                                                                          |
-|---------------------------------|----------------------|----------|------------------------------------------------------------------------------------------------------|
-| env                             |                      | Yes      |                                                                                                      |
-| alert_env                       |                      | Yes      |                                                                                                      |
-| service                         |                      | Yes      |                                                                                                      |
-| service_display_name            | null                 | No       |                                                                                                      |
-| trace_span_name                 | http.request         | No       | Traces contain a span name. Example:
+| variable                        | default      | required | description                                                                                          |
+|---------------------------------|--------------|----------|------------------------------------------------------------------------------------------------------|
+| env                             |              | Yes      |                                                                                                      |
+| alert_env                       |              | Yes      |                                                                                                      |
+| service                         |              | Yes      |                                                                                                      |
+| service_display_name            | null         | No       |                                                                                                      |
+| trace_span_name                 | http.request | No       | Traces contain a span name. Example:
   trace.<SPAN_NAME>.<METRIC_SUFFIX>
   trace.<SPAN_NAME>.<METRIC_SUFFIX>.<2ND_PRIM_TAG>_service
 
 The name of the operation or span.name (examples: redis.command, pylons.request, rails.request, mysql.query
 https://docs.datadoghq.com/tracing/guide/metrics_namespace/ |
-| notification_channel            |                      | Yes      |                                                                                                      |
-| additional_tags                 | []                   | No       |                                                                                                      |
-| name_prefix                     | ""                   | No       |                                                                                                      |
-| name_suffix                     | ""                   | No       |                                                                                                      |
-| locked                          | True                 | No       |                                                                                                      |
-| create_slo                      | True                 | No       |                                                                                                      |
-| slo_warning                     | null                 | No       |                                                                                                      |
-| slo_critical                    | 99.9                 | No       |                                                                                                      |
-| slo_timeframe                   | 30d                  | No       |                                                                                                      |
-| slo_alerting_enabled            | True                 | No       |                                                                                                      |
-| latency_excluded_resource_names | []                   | No       | List of resource names to exclude in latency oriented monitors or SLOs. Some requests might be batch requests |
-| filters_str_override            | null                 | No       |                                                                                                      |
-| error_slo_error_filter          | ,http.status_code:5* | No       | Filter string to select the errors for the error SLO, Dont forget to include the comma or (AND or OR) keywords |
+| notification_channel            |              | Yes      |                                                                                                      |
+| additional_tags                 | []           | No       |                                                                                                      |
+| name_prefix                     | ""           | No       |                                                                                                      |
+| name_suffix                     | ""           | No       |                                                                                                      |
+| locked                          | True         | No       |                                                                                                      |
+| create_slo                      | True         | No       |                                                                                                      |
+| slo_warning                     | null         | No       |                                                                                                      |
+| slo_critical                    | 99.9         | No       |                                                                                                      |
+| slo_timeframe                   | 30d          | No       |                                                                                                      |
+| slo_alerting_enabled            | True         | No       |                                                                                                      |
+| latency_excluded_resource_names | []           | No       | List of resource names to exclude in latency oriented monitors or SLOs. Some requests might be batch requests |
+| filters_str_override            | null         | No       |                                                                                                      |
 
 

@@ -1,9 +1,41 @@
 
 ![Datadog](https://imgix.datadoghq.com/img/about/presskit/logo-v/dd_vertical_purple.png)
 
-[//]: # (This file is generated. Do not edit)
+[//]: # (This file is generated. Do not edit, module description can be added by editing / creating module_description.md)
 
 # Terraform module for Datadog Apm
+
+This module adds error and latency monitoring for APM data.
+It also includes SLO's for errors and latency but this requires some manual actions first.
+Datadog has a feature to generated metrics based on APM data.
+Unfortunately this is not a feature you can configure with Terraform.
+You'll have to create these metrics by hand unfortunately :( 
+
+In Datadog go to APM -> Setup and Configuration -> Generate Metrics -> New Metric
+
+First create this one
+![Hits](APM_Generate_Metrics_Hits.png)
+
+Based on this hits metric we create our Errors SLO
+
+Then you should pick a few latency buckets for example:
+- 100ms
+- 250ms
+- 500ms
+- 1000ms
+
+![Hits](APM_Generate_Metrics_lt250ms.png)
+
+Based on these buckets and also the hits metric we generate our Latency SLO.
+
+This module is part of a larger suite of modules that provide alerts in Datadog.
+Other modules can be found on the [Terraform Registry](https://registry.terraform.io/search/modules?namespace=kabisa&provider=datadog)
+
+We have two base modules we use to standardise development of our Monitor Modules:
+- [generic monitor](https://github.com/kabisa/terraform-datadog-generic-monitor) Used in 90% of our alerts
+- [service check monitor](https://github.com/kabisa/terraform-datadog-service-check-monitor)
+
+Modules are generated with this tool: https://github.com/kabisa/datadog-terraform-generator
 
 Monitors:
 * [Terraform module for Datadog Apm](#terraform-module-for-datadog-apm)
@@ -17,7 +49,7 @@ Monitors:
   * [Latency](#latency)
   * [Module Variables](#module-variables)
 
-# Getting started
+# Getting started developing
 [pre-commit](http://pre-commit.com/) was used to do Terraform linting and validating.
 
 Steps:
@@ -31,13 +63,13 @@ Number of requests per second
 
 Query:
 ```terraform
-avg(${var.request_rate_evaluation_period}):sum:trace.${var.trace_span_name}.hits{${local.request_rate_filter}}.as_rate() > ${var.request_rate_critical}
+avg(last_30m):sum:trace.${var.trace_span_name}.hits{tag:xxx}.as_rate() > 
 ```
 
 | variable                       | default                       | required | description                      |
 |--------------------------------|-------------------------------|----------|----------------------------------|
 | request_rate_enabled           | True                          | No       |                                  |
-| request_rate_warning           | null                          | No       |                                  |
+| request_rate_warning           | None                          | No       |                                  |
 | request_rate_critical          |                               | Yes      |                                  |
 | request_rate_evaluation_period | last_30m                      | No       |                                  |
 | request_rate_note              | ""                            | No       |                                  |
@@ -51,7 +83,7 @@ avg(${var.request_rate_evaluation_period}):sum:trace.${var.trace_span_name}.hits
 
 Query:
 ```terraform
-avg(${var.error_percentage_evaluation_period}):100 * (sum:trace.${var.trace_span_name}.errors{${local.error_percentage_filter}}.as_rate() / sum:trace.${var.trace_span_name}.hits{${local.error_percentage_filter}}.as_rate() ) > ${var.error_percentage_critical}
+avg(last_10m):100 * (sum:trace.${var.trace_span_name}.errors{tag:xxx}.as_rate() / sum:trace.${var.trace_span_name}.hits{tag:xxx}.as_rate() ) > 0.05
 ```
 
 | variable                           | default  | required | description                      |
@@ -73,7 +105,7 @@ Request rate anomaly detection is performed by taking the standard deviation and
 
 Query:
 ```terraform
-avg(${var.request_rate_anomaly_evaluation_period}):anomalies(sum:trace.${var.trace_span_name}.hits{${local.request_rate_anomaly_filter}}.as_rate(), 'agile', ${var.request_rate_anomaly_std_dev_count}, direction='both', alert_window='${var.request_rate_anomaly_trigger_window}', interval=60, count_default_zero='false', seasonality='weekly') > ${var.request_rate_anomaly_critical}
+avg(last_30m):anomalies(sum:trace.${var.trace_span_name}.hits{tag:xxx}.as_rate(), 'agile', ${var.request_rate_anomaly_std_dev_count}, direction='both', alert_window='${var.request_rate_anomaly_trigger_window}', interval=60, count_default_zero='false', seasonality='weekly') > 0.2
 ```
 
 | variable                               | default                                  | required | description                                                                       |
@@ -96,7 +128,7 @@ avg(${var.request_rate_anomaly_evaluation_period}):anomalies(sum:trace.${var.tra
 
 Query:
 ```terraform
-avg(${var.latency_p95_evaluation_period}):p95:trace.${var.trace_span_name}{${local.latency_filter}} > ${var.latency_p95_critical}
+avg(last_10m):p95:trace.${var.trace_span_name}{${local.latency_filter}} > 1.3
 ```
 
 | variable                      | default  | required | description                      |
@@ -119,7 +151,7 @@ avg(${var.latency_p95_evaluation_period}):p95:trace.${var.trace_span_name}{${loc
 | latency_slo_note             | ""         | No       |                                                                                                      |
 | latency_slo_docs             | ""         | No       |                                                                                                      |
 | latency_slo_filter_override  | ""         | No       |                                                                                                      |
-| latency_slo_warning          | null       | No       |                                                                                                      |
+| latency_slo_warning          | None       | No       |                                                                                                      |
 | latency_slo_critical         | 99.9       | No       |                                                                                                      |
 | latency_slo_alerting_enabled | True       | No       |                                                                                                      |
 | latency_slo_status_ok_filter | ,status:ok | No       | Filter string to select the non-errors for the latency SLO, Dont forget to include the comma or (AND or OR) keywords |
@@ -129,11 +161,11 @@ avg(${var.latency_p95_evaluation_period}):p95:trace.${var.trace_span_name}{${loc
 
 ## Apdex
 
-    Apdex is a measure of response time based against a set threshold. It measures the ratio of satisfactory response times to unsatisfactory response times. The response time is measured from an asset request to completed delivery back to the requestor. For more see: https://en.wikipedia.org/wiki/Apdex#Apdex_method
+Apdex is a measure of response time based against a set threshold. It measures the ratio of satisfactory response times to unsatisfactory response times. The response time is measured from an asset request to completed delivery back to the requestor. For more see: https://en.wikipedia.org/wiki/Apdex#Apdex_method
 
 Query:
 ```terraform
-avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.apdex.by.service{${local.apdex_filter}} < ${var.apdex_critical}
+avg(last_10m):avg:trace.${var.trace_span_name}.apdex.by.service{tag:xxx} < 0.8
 ```
 
 | variable                | default                                  | required | description                      |
@@ -151,20 +183,26 @@ avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.apdex.by.se
 
 ## Errors Slo
 
-| variable                   | default              | required | description                                                                                          |
-|----------------------------|----------------------|----------|------------------------------------------------------------------------------------------------------|
-| error_slo_enabled          | True                 | No       |                                                                                                      |
-| error_slo_note             | ""                   | No       |                                                                                                      |
-| error_slo_docs             | ""                   | No       |                                                                                                      |
-| error_slo_filter_override  | ""                   | No       |                                                                                                      |
-| error_slo_warning          | null                 | No       |                                                                                                      |
-| error_slo_critical         | 99.9                 | No       |                                                                                                      |
-| error_slo_alerting_enabled | True                 | No       |                                                                                                      |
-| error_slo_error_filter     | ,http.status_code:5* | No       | Filter string to select the errors for the error SLO, Dont forget to include the comma or (AND or OR) keywords |
-| error_slo_timeframe        | 30d                  | No       |                                                                                                      |
+| variable                      | default       | required | description                                                                                          |
+|-------------------------------|---------------|----------|------------------------------------------------------------------------------------------------------|
+| error_slo_enabled             | True          | No       |                                                                                                      |
+| error_slo_note                | ""            | No       |                                                                                                      |
+| error_slo_docs                | ""            | No       |                                                                                                      |
+| error_slo_filter_override     | ""            | No       |                                                                                                      |
+| error_slo_warning             | None          | No       |                                                                                                      |
+| error_slo_critical            | 99.9          | No       |                                                                                                      |
+| error_slo_alerting_enabled    | True          | No       |                                                                                                      |
+| error_slo_status_ok_filter    | ,status:ok    | No       | Filter string to select the non-errors for the SLO, Dont forget to include the comma or (AND or OR) keywords |
+| error_slo_status_error_filter | ,status:error | No       | Filter string to select the non-errors for the SLO, Dont forget to include the comma or (AND or OR) keywords |
+| error_slo_timeframe           | 30d           | No       |                                                                                                      |
 
 
 ## Latency
+
+Query:
+```terraform
+avg(last_10m):avg:trace.${var.trace_span_name}{tag:xxx} > 0.5
+```
 
 | variable                  | default  | required | description                      |
 |---------------------------|----------|----------|----------------------------------|
@@ -186,7 +224,7 @@ avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.apdex.by.se
 | env                             |              | Yes      |                                                                                                      |
 | alert_env                       |              | Yes      |                                                                                                      |
 | service                         |              | Yes      |                                                                                                      |
-| service_display_name            | null         | No       |                                                                                                      |
+| service_display_name            | None         | No       |                                                                                                      |
 | trace_span_name                 | http.request | No       | Traces contain a span name. Example:
   trace.<SPAN_NAME>.<METRIC_SUFFIX>
   trace.<SPAN_NAME>.<METRIC_SUFFIX>.<2ND_PRIM_TAG>_service
@@ -199,6 +237,6 @@ https://docs.datadoghq.com/tracing/guide/metrics_namespace/ |
 | name_suffix                     | ""           | No       |                                                                                                      |
 | locked                          | True         | No       |                                                                                                      |
 | latency_excluded_resource_names | []           | No       | List of resource names to exclude in latency oriented monitors or SLOs. Some requests might be batch requests |
-| filters_str_override            | null         | No       |                                                                                                      |
+| filters_str_override            | None         | No       |                                                                                                      |
 
 

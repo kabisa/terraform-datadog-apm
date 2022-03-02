@@ -19,8 +19,8 @@ resource "datadog_service_level_objective" "error_slo" {
   }
 
   query {
-    numerator   = "sum:trace.${var.trace_span_name}.hits{${local.error_slo_filter}}.as_count() - sum:trace.${var.trace_span_name}.hits{${local.error_slo_filter}${var.error_slo_error_filter}}.as_count()"
-    denominator = "sum:trace.${var.trace_span_name}.hits{${local.error_slo_filter}}.as_count()"
+    numerator   = "sum:custom_trace.hits{${local.error_slo_filter}${var.error_slo_status_ok_filter}}.as_count()"
+    denominator = "sum:custom_trace.hits{${local.error_slo_filter}${var.error_slo_status_ok_filter}}.as_count() + sum:custom_trace.hits{${local.error_slo_filter}${var.error_slo_status_error_filter}}.as_count()"
   }
 
   tags = local.normalized_tags

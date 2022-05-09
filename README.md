@@ -128,19 +128,19 @@ avg(last_30m):anomalies(sum:trace.${var.trace_span_name}.hits{tag:xxx}.as_rate()
 
 Query:
 ```terraform
-avg(last_10m):p95:trace.${var.trace_span_name}{${local.latency_filter}} > 1.3
+percentile(last_10m):p95:trace.${var.trace_span_name}{${local.latency_filter}} > 1.3e+10
 ```
 
-| variable                      | default  | required | description                      |
-|-------------------------------|----------|----------|----------------------------------|
-| latency_p95_enabled           | True     | No       |                                  |
-| latency_p95_warning           | 0.9      | No       |                                  |
-| latency_p95_critical          | 1.3      | No       |                                  |
-| latency_p95_evaluation_period | last_10m | No       |                                  |
-| latency_p95_note              | ""       | No       |                                  |
-| latency_p95_docs              | ""       | No       |                                  |
-| latency_p95_alerting_enabled  | True     | No       |                                  |
-| latency_p95_priority          | 3        | No       | Number from 1 (high) to 5 (low). |
+| variable                      | default  | required | description                                                                          |
+|-------------------------------|----------|----------|--------------------------------------------------------------------------------------|
+| latency_p95_enabled           | True     | No       |                                                                                      |
+| latency_p95_warning           | 0.9e+10  | No       | P95 Latency in nanoseconds. Use scientific (1.9e+10) notation so you can see seconds |
+| latency_p95_critical          | 1.3e+10  | No       | P95 Latency in nanoseconds. Use scientific (1.3e+10) notation so you can see seconds |
+| latency_p95_evaluation_period | last_10m | No       |                                                                                      |
+| latency_p95_note              | ""       | No       |                                                                                      |
+| latency_p95_docs              | ""       | No       |                                                                                      |
+| latency_p95_alerting_enabled  | True     | No       |                                                                                      |
+| latency_p95_priority          | 3        | No       | Number from 1 (high) to 5 (low).                                                     |
 
 
 ## Latency Slo

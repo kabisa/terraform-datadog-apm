@@ -4,13 +4,15 @@ variable "latency_p95_enabled" {
 }
 
 variable "latency_p95_warning" {
-  type    = number
-  default = 0.9
+  type        = number
+  default     = "0.9e+10" # 0.9 seconds
+  description = "P95 Latency in nanoseconds. Use scientific (1.9e+10) notation so you can see seconds"
 }
 
 variable "latency_p95_critical" {
-  type    = number
-  default = 1.3
+  type        = number
+  default     = "1.3e+10" # 1.3 seconds
+  description = "P95 Latency in nanoseconds. Use scientific (1.3e+10) notation so you can see seconds"
 }
 
 variable "latency_p95_evaluation_period" {

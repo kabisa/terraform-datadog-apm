@@ -17,7 +17,7 @@ variable "latency_p95_critical" {
 
 variable "latency_p95_evaluation_period" {
   type    = string
-  default = "last_10m"
+  default = "last_15m"
 }
 
 variable "latency_p95_note" {

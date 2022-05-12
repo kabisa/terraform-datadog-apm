@@ -6,11 +6,12 @@ locals {
 }
 
 module "latency_p95" {
-  source = "git@github.com:kabisa/terraform-datadog-generic-monitor.git?ref=0.7.0"
+  source  = "kabisa/generic-monitor/datadog"
+  version = "0.7.3"
 
   name = "APM - ${title(split(".", var.trace_span_name)[0])} - Latency(p95)"
   # using same filters as for avg latency
-  query = "avg(${var.latency_p95_evaluation_period}):p95:trace.${var.trace_span_name}{${local.latency_filter}} > ${var.latency_p95_critical}"
+  query = "percentile(${var.latency_p95_evaluation_period}):p95:trace.${var.trace_span_name}{${local.latency_filter}} > ${var.latency_p95_critical}"
 
   alert_message    = "The latency_p95 for service ${local.service_display_name} ({{value}}) has risen above {{threshold}}"
   recovery_message = "The latency_p95 for service ${local.service_display_name} ({{value}}) has recovered"

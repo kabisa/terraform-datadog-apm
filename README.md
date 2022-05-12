@@ -128,15 +128,15 @@ avg(last_30m):anomalies(sum:trace.${var.trace_span_name}.hits{tag:xxx}.as_rate()
 
 Query:
 ```terraform
-avg(last_10m):p95:trace.${var.trace_span_name}{${local.latency_filter}} > 1.3
+percentile(last_15m):p95:trace.${var.trace_span_name}{${local.latency_filter}} > 1.3
 ```
 
 | variable                                  | default  | required | description                      |
 |-------------------------------------------|----------|----------|----------------------------------|
 | latency_p95_enabled                       | True     | No       |                                  |
-| latency_p95_warning                       | 0.9      | No       |                                  |
-| latency_p95_critical                      | 1.3      | No       |                                  |
-| latency_p95_evaluation_period             | last_10m | No       |                                  |
+| latency_p95_warning                       | 0.9      | No       | P95 Latency in seconds.          |
+| latency_p95_critical                      | 1.3      | No       | P95 Latency warning in seconds.  |
+| latency_p95_evaluation_period             | last_15m | No       |                                  |
 | latency_p95_note                          | ""       | No       |                                  |
 | latency_p95_docs                          | ""       | No       |                                  |
 | latency_p95_alerting_enabled              | True     | No       |                                  |

@@ -99,3 +99,18 @@ variable "error_slo_burn_rate_docs" {
   type    = string
   default = ""
 }
+
+variable "error_slo_burn_rate_evaluation_period" {
+  type    = string
+  default = "30d"
+}
+
+variable "error_slo_burn_rate_short_window" {
+  type    = string
+  default = "5m"
+}
+
+variable "error_slo_burn_rate_long_window" {
+  type    = string
+  default = "1h"
+}

@@ -43,8 +43,8 @@ module "error_slo_burn_rate" {
   version = "0.7.4"
 
   name  = "${local.service_display_name} - APM - Error SLO - Burn Rate"
-  query = "burn_rate(\"${datadog_service_level_objective.error_slo[0].id}\").over(\"30d\").long_window(\"1h\").short_window(\"5m\") > ${var.error_slo_burn_rate_critical}"
-  # query            = "avg(${var.error_percentage_evaluation_period}):100 * (sum:trace.${var.trace_span_name}.errors{${local.error_percentage_filter}}.as_rate() / sum:trace.${var.trace_span_name}.hits{${local.error_percentage_filter}}.as_rate() ) > ${var.error_slo_burn_rate_critical}"
+  query = "burn_rate(\"${datadog_service_level_objective.error_slo[0].id}\").over(\"${var.error_slo_burn_rate_evaluation_period}\").long_window(\"${var.error_slo_burn_rate_long_window}\").short_window(\"${var.error_slo_burn_rate_short_window}\") > ${var.error_slo_burn_rate_critical}"
+
 
   alert_message    = "${local.service_display_name} service is burning through its Error Budget. The percentage of 5XX status codes is {{threshold}}x higher than expected"
   recovery_message = "${local.service_display_name} service burn rate has recovered"

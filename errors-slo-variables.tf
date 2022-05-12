@@ -57,3 +57,45 @@ variable "error_slo_denominator_override" {
   type    = string
   default = ""
 }
+
+variable "error_slo_burn_rate_notification_channel_override" {
+  type    = string
+  default = ""
+}
+
+variable "error_slo_burn_rate_enabled" {
+  type    = bool
+  default = true
+}
+
+variable "error_slo_burn_rate_alerting_enabled" {
+  type    = bool
+  default = true
+}
+
+variable "error_slo_burn_rate_priority" {
+  description = "Number from 1 (high) to 5 (low)."
+
+  type    = number
+  default = 3
+}
+
+variable "error_slo_burn_rate_warning" {
+  type    = number
+  default = null
+}
+
+variable "error_slo_burn_rate_critical" {
+  type    = number
+  default = 10 # 10x burn rate
+}
+
+variable "error_slo_burn_rate_note" {
+  type    = string
+  default = ""
+}
+
+variable "error_slo_burn_rate_docs" {
+  type    = string
+  default = ""
+}

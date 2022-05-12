@@ -184,18 +184,19 @@ avg(last_10m):avg:trace.${var.trace_span_name}.apdex.by.service{tag:xxx} < 0.8
 
 ## Errors Slo
 
-| variable                      | default       | required | description                                                                                          |
-|-------------------------------|---------------|----------|------------------------------------------------------------------------------------------------------|
-| error_slo_enabled             | True          | No       |                                                                                                      |
-| error_slo_note                | ""            | No       |                                                                                                      |
-| error_slo_docs                | ""            | No       |                                                                                                      |
-| error_slo_filter_override     | ""            | No       |                                                                                                      |
-| error_slo_warning             | None          | No       |                                                                                                      |
-| error_slo_critical            | 99.9          | No       |                                                                                                      |
-| error_slo_alerting_enabled    | True          | No       |                                                                                                      |
-| error_slo_status_ok_filter    | ,status:ok    | No       | Filter string to select the non-errors for the SLO, Dont forget to include the comma or (AND or OR) keywords |
-| error_slo_status_error_filter | ,status:error | No       | Filter string to select the non-errors for the SLO, Dont forget to include the comma or (AND or OR) keywords |
-| error_slo_timeframe           | 30d           | No       |                                                                                                      |
+| variable                       | default       | required | description                                                                                          |
+|--------------------------------|---------------|----------|------------------------------------------------------------------------------------------------------|
+| error_slo_enabled              | True          | No       |                                                                                                      |
+| error_slo_note                 | ""            | No       |                                                                                                      |
+| error_slo_docs                 | ""            | No       |                                                                                                      |
+| error_slo_filter_override      | ""            | No       |                                                                                                      |
+| error_slo_warning              | None          | No       |                                                                                                      |
+| error_slo_critical             | 99.9          | No       |                                                                                                      |
+| error_slo_alerting_enabled     | True          | No       |                                                                                                      |
+| error_slo_error_filter         | ,status:error | No       | Filter string to select the non-errors for the SLO, Dont forget to include the comma or (AND or OR) keywords |
+| error_slo_timeframe            | 30d           | No       |                                                                                                      |
+| error_slo_numerator_override   | ""            | No       |                                                                                                      |
+| error_slo_denominator_override | ""            | No       |                                                                                                      |
 
 
 ## Latency
@@ -221,27 +222,24 @@ avg(last_10m):avg:trace.${var.trace_span_name}{tag:xxx} > 0.5
 
 ## Module Variables
 
-| variable                        | default              | required | description                                                                                          |
-|---------------------------------|----------------------|----------|------------------------------------------------------------------------------------------------------|
-| env                             |                      | Yes      |                                                                                                      |
-| alert_env                       |                      | Yes      |                                                                                                      |
-| service                         |                      | Yes      |                                                                                                      |
-| service_display_name            | None                 | No       |                                                                                                      |
-| trace_span_name                 | http.request         | No       | Traces contain a span name. Example:
+| variable                        | default      | required | description                                                                                          |
+|---------------------------------|--------------|----------|------------------------------------------------------------------------------------------------------|
+| env                             |              | Yes      |                                                                                                      |
+| alert_env                       |              | Yes      |                                                                                                      |
+| service                         |              | Yes      |                                                                                                      |
+| service_display_name            | None         | No       |                                                                                                      |
+| trace_span_name                 | http.request | No       | Traces contain a span name. Example:
   trace.<SPAN_NAME>.<METRIC_SUFFIX>
   trace.<SPAN_NAME>.<METRIC_SUFFIX>.<2ND_PRIM_TAG>_service
 
 The name of the operation or span.name (examples: redis.command, pylons.request, rails.request, mysql.query
 https://docs.datadoghq.com/tracing/guide/metrics_namespace/ |
-| notification_channel            |                      | Yes      |                                                                                                      |
-| additional_tags                 | []                   | No       |                                                                                                      |
-| name_prefix                     | ""                   | No       |                                                                                                      |
-| name_suffix                     | ""                   | No       |                                                                                                      |
-| locked                          | True                 | No       |                                                                                                      |
-| latency_excluded_resource_names | []                   | No       | List of resource names to exclude in latency oriented monitors or SLOs. Some requests might be batch requests |
-| filters_str_override            | None                 | No       |                                                                                                      |
-| error_slo_error_filter          | ,http.status_code:5* | No       | Filter string to select the errors for the error SLO, Dont forget to include the comma or (AND or OR) keywords |
-| error_slo_numerator_override    | ""                   | No       |                                                                                                      |
-| error_slo_denominator_override  | ""                   | No       |                                                                                                      |
+| notification_channel            |              | Yes      |                                                                                                      |
+| additional_tags                 | []           | No       |                                                                                                      |
+| name_prefix                     | ""           | No       |                                                                                                      |
+| name_suffix                     | ""           | No       |                                                                                                      |
+| locked                          | True         | No       |                                                                                                      |
+| latency_excluded_resource_names | []           | No       | List of resource names to exclude in latency oriented monitors or SLOs. Some requests might be batch requests |
+| filters_str_override            | None         | No       |                                                                                                      |
 
 

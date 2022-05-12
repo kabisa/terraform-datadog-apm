@@ -33,13 +33,7 @@ variable "error_slo_alerting_enabled" {
   default = true
 }
 
-variable "error_slo_status_ok_filter" {
-  type        = string
-  description = "Filter string to select the non-errors for the SLO, Dont forget to include the comma or (AND or OR) keywords"
-  default     = ",status:ok"
-}
-
-variable "error_slo_status_error_filter" {
+variable "error_slo_error_filter" {
   type        = string
   description = "Filter string to select the non-errors for the SLO, Dont forget to include the comma or (AND or OR) keywords"
   default     = ",status:error"
@@ -52,4 +46,14 @@ variable "error_slo_timeframe" {
   }
   type    = string
   default = "30d"
+}
+
+variable "error_slo_numerator_override" {
+  type    = string
+  default = ""
+}
+
+variable "error_slo_denominator_override" {
+  type    = string
+  default = ""
 }

@@ -5,11 +5,11 @@ locals {
   )
   error_slo_numerator = coalesce(
     var.error_slo_numerator_override,
-    "sum:trace.${var.trace_span_name}.request.hits{${local.error_slo_filter}}.as_count() - sum:trace.${var.trace_span_name}.request.hits{${local.error_slo_filter}${var.error_slo_error_filter}}.as_count()"
+    "sum:trace.${var.trace_span_name}.hits{${local.error_slo_filter}}.as_count() - sum:trace.${var.trace_span_name}.hits{${local.error_slo_filter}${var.error_slo_error_filter}}.as_count()"
   )
   error_slo_denominator = coalesce(
     var.error_slo_denominator_override,
-    "sum:trace.${var.trace_span_name}.request.hits{${local.error_slo_filter}}.as_count()"
+    "sum:trace.${var.trace_span_name}.hits{${local.error_slo_filter}}.as_count()"
   )
 }
 

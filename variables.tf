@@ -63,19 +63,3 @@ variable "filters_str_override" {
   type    = string
   default = null
 }
-
-variable "error_slo_error_filter" {
-  type        = string
-  description = "Filter string to select the errors for the error SLO, Dont forget to include the comma or (AND or OR) keywords"
-  default     = ",http.status_code:5*"
-}
-
-variable "error_slo_numerator_override" {
-  type    = string
-  default = ""
-}
-
-variable "error_slo_denominator_override" {
-  type    = string
-  default = ""
-}

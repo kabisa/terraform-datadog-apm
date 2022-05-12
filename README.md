@@ -131,16 +131,17 @@ Query:
 avg(last_10m):p95:trace.${var.trace_span_name}{${local.latency_filter}} > 1.3
 ```
 
-| variable                      | default  | required | description                      |
-|-------------------------------|----------|----------|----------------------------------|
-| latency_p95_enabled           | True     | No       |                                  |
-| latency_p95_warning           | 0.9      | No       |                                  |
-| latency_p95_critical          | 1.3      | No       |                                  |
-| latency_p95_evaluation_period | last_10m | No       |                                  |
-| latency_p95_note              | ""       | No       |                                  |
-| latency_p95_docs              | ""       | No       |                                  |
-| latency_p95_alerting_enabled  | True     | No       |                                  |
-| latency_p95_priority          | 3        | No       | Number from 1 (high) to 5 (low). |
+| variable                                  | default  | required | description                      |
+|-------------------------------------------|----------|----------|----------------------------------|
+| latency_p95_enabled                       | True     | No       |                                  |
+| latency_p95_warning                       | 0.9      | No       |                                  |
+| latency_p95_critical                      | 1.3      | No       |                                  |
+| latency_p95_evaluation_period             | last_10m | No       |                                  |
+| latency_p95_note                          | ""       | No       |                                  |
+| latency_p95_docs                          | ""       | No       |                                  |
+| latency_p95_alerting_enabled              | True     | No       |                                  |
+| latency_p95_priority                      | 3        | No       | Number from 1 (high) to 5 (low). |
+| latency_p95_notification_channel_override | ""       | No       |                                  |
 
 
 ## Latency Slo
@@ -204,17 +205,18 @@ Query:
 avg(last_10m):avg:trace.${var.trace_span_name}{tag:xxx} > 0.5
 ```
 
-| variable                  | default  | required | description                      |
-|---------------------------|----------|----------|----------------------------------|
-| latency_enabled           | True     | No       |                                  |
-| latency_warning           | 0.3      | No       |                                  |
-| latency_critical          | 0.5      | No       |                                  |
-| latency_evaluation_period | last_10m | No       |                                  |
-| latency_note              | ""       | No       |                                  |
-| latency_docs              | ""       | No       |                                  |
-| latency_filter_override   | ""       | No       |                                  |
-| latency_alerting_enabled  | True     | No       |                                  |
-| latency_priority          | 3        | No       | Number from 1 (high) to 5 (low). |
+| variable                              | default  | required | description                      |
+|---------------------------------------|----------|----------|----------------------------------|
+| latency_enabled                       | True     | No       |                                  |
+| latency_warning                       | 0.3      | No       |                                  |
+| latency_critical                      | 0.5      | No       |                                  |
+| latency_evaluation_period             | last_10m | No       |                                  |
+| latency_note                          | ""       | No       |                                  |
+| latency_docs                          | ""       | No       |                                  |
+| latency_filter_override               | ""       | No       |                                  |
+| latency_alerting_enabled              | True     | No       |                                  |
+| latency_priority                      | 3        | No       | Number from 1 (high) to 5 (low). |
+| latency_notification_channel_override | ""       | No       |                                  |
 
 
 ## Module Variables

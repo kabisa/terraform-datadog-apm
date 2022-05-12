@@ -6,6 +6,10 @@ locals {
     var.latency_filter_override,
     local.default_latency_filter
   )
+  latency_notification_channel = coalesce(
+    var.latency_notification_channel_override,
+    var.notification_channel
+  )
 }
 
 module "latency" {
@@ -30,7 +34,7 @@ module "latency" {
   env                  = var.alert_env
   service              = var.service
   service_display_name = var.service_display_name
-  notification_channel = var.notification_channel
+  notification_channel = local.latency_notification_channel
   additional_tags      = var.additional_tags
   locked               = var.locked
   name_prefix          = var.name_prefix

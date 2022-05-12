@@ -1,3 +1,10 @@
+locals {
+  latency_p95_notification_channel = coalesce(
+    var.latency_p95_notification_channel_override,
+    var.notification_channel
+  )
+}
+
 module "latency_p95" {
   source = "git@github.com:kabisa/terraform-datadog-generic-monitor.git?ref=0.7.0"
 
@@ -21,7 +28,7 @@ module "latency_p95" {
   env                  = var.alert_env
   service              = var.service
   service_display_name = var.service_display_name
-  notification_channel = var.notification_channel
+  notification_channel = local.latency_p95_notification_channel
   additional_tags      = var.additional_tags
   locked               = var.locked
   name_prefix          = var.name_prefix

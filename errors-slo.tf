@@ -42,7 +42,7 @@ module "error_slo_burn_rate" {
   source  = "kabisa/generic-monitor/datadog"
   version = "0.7.4"
 
-  name  = "${local.service_display_name} - APM - Error SLO - Burn Rate"
+  name  = "APM - Error SLO - Burn Rate"
   query = "burn_rate(\"${datadog_service_level_objective.error_slo[0].id}\").over(\"${var.error_slo_burn_rate_evaluation_period}\").long_window(\"${var.error_slo_burn_rate_long_window}\").short_window(\"${var.error_slo_burn_rate_short_window}\") > ${var.error_slo_burn_rate_critical}"
 
 

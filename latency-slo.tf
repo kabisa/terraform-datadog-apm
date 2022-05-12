@@ -35,11 +35,11 @@ module "latency_slo_burn_rate" {
   source  = "kabisa/generic-monitor/datadog"
   version = "0.7.4"
 
-  name  = "${local.service_display_name} - APM - Error SLO - Burn Rate"
+  name  = "APM - Latency SLO - Burn Rate"
   query = "burn_rate(\"${datadog_service_level_objective.latency_slo[0].id}\").over(\"${var.latency_slo_burn_rate_evaluation_period}\").long_window(\"${var.latency_slo_burn_rate_long_window}\").short_window(\"${var.latency_slo_burn_rate_short_window}\") > ${var.latency_slo_burn_rate_critical}"
 
 
-  alert_message    = "${local.service_display_name} service is burning through its Error Budget. The percentage of 5XX status codes is {{threshold}}x higher than expected"
+  alert_message    = "${local.service_display_name} service is burning through its Latency Budget. The percentage of slow requests is {{threshold}}x higher than expected"
   recovery_message = "${local.service_display_name} service burn rate has recovered"
   type             = "slo alert"
 

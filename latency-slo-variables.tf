@@ -54,3 +54,60 @@ variable "latency_slo_timeframe" {
   type    = string
   default = "30d"
 }
+
+variable "latency_slo_burn_rate_priority" {
+  description = "Number from 1 (high) to 5 (low)."
+
+  type    = number
+  default = 3
+}
+
+variable "latency_slo_burn_rate_warning" {
+  type    = number
+  default = null
+}
+
+variable "latency_slo_burn_rate_critical" {
+  type    = number
+  default = 10 # 10x burn rate
+}
+
+variable "latency_slo_burn_rate_note" {
+  type    = string
+  default = ""
+}
+
+variable "latency_slo_burn_rate_docs" {
+  type    = string
+  default = ""
+}
+
+variable "latency_slo_burn_rate_evaluation_period" {
+  type    = string
+  default = "30d"
+}
+
+variable "latency_slo_burn_rate_short_window" {
+  type    = string
+  default = "5m"
+}
+
+variable "latency_slo_burn_rate_long_window" {
+  type    = string
+  default = "1h"
+}
+
+variable "latency_slo_burn_rate_notification_channel_override" {
+  type    = string
+  default = ""
+}
+
+variable "latency_slo_burn_rate_enabled" {
+  type    = bool
+  default = true
+}
+
+variable "latency_slo_burn_rate_alerting_enabled" {
+  type    = bool
+  default = true
+}

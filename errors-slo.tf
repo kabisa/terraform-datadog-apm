@@ -40,18 +40,18 @@ resource "datadog_service_level_objective" "error_slo" {
 
 module "error_slo_burn_rate" {
   source  = "kabisa/generic-monitor/datadog"
-  version = "0.7.3"
+  version = "0.7.4"
 
   name  = "${local.service_display_name} - APM - Error SLO - Burn Rate"
-  # query = "burn_rate(\"072fdd4535d553ddaaf2ee79f99ef735\").over(\"30d\").long_window(\"1h\").short_window(\"5m\") > 10"
-  query            = "avg(${var.error_percentage_evaluation_period}):100 * (sum:trace.${var.trace_span_name}.errors{${local.error_percentage_filter}}.as_rate() / sum:trace.${var.trace_span_name}.hits{${local.error_percentage_filter}}.as_rate() ) > ${var.error_slo_burn_rate_critical}"
+  query = "burn_rate(\"${datadog_service_level_objective.error_slo[0].id}\").over(\"30d\").long_window(\"1h\").short_window(\"5m\") > ${var.error_slo_burn_rate_critical}"
+  # query            = "avg(${var.error_percentage_evaluation_period}):100 * (sum:trace.${var.trace_span_name}.errors{${local.error_percentage_filter}}.as_rate() / sum:trace.${var.trace_span_name}.hits{${local.error_percentage_filter}}.as_rate() ) > ${var.error_slo_burn_rate_critical}"
 
-  alert_message    = "The latency for service ${local.service_display_name} ({{value}}) has risen above {{threshold}}"
-  recovery_message = "The latency for service ${local.service_display_name} ({{value}}) has recovered"
-  # type             = "slo alert"
+  alert_message    = "${local.service_display_name} service is burning through its Error Budget. The percentage of 5XX status codes is {{threshold}}x higher than expected"
+  recovery_message = "${local.service_display_name} service burn rate has recovered"
+  type             = "slo alert"
 
   # monitor level vars
-  enabled            = var.error_slo_burn_rate_enabled
+  enabled            = var.error_slo_enabled && var.error_slo_burn_rate_enabled
   alerting_enabled   = var.error_slo_burn_rate_alerting_enabled
   warning_threshold  = var.error_slo_burn_rate_warning
   critical_threshold = var.error_slo_burn_rate_critical

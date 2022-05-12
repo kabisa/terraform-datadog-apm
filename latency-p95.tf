@@ -1,8 +1,8 @@
 locals {
-  latency_p95_notification_channel = coalesce(
+  latency_p95_notification_channel = try(coalesce(
     var.latency_p95_notification_channel_override,
     var.notification_channel
-  )
+  ), "")
 }
 
 module "latency_p95" {

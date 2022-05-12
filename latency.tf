@@ -6,10 +6,10 @@ locals {
     var.latency_filter_override,
     local.default_latency_filter
   )
-  latency_notification_channel = coalesce(
+  latency_notification_channel = try(coalesce(
     var.latency_notification_channel_override,
     var.notification_channel
-  )
+  ), "")
 }
 
 module "latency" {

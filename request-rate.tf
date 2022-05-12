@@ -7,7 +7,7 @@ locals {
 
 module "request_rate" {
   source  = "kabisa/generic-monitor/datadog"
-  version = "0.7.3"
+  version = "0.7.4"
 
   name  = "APM - ${title(split(".", var.trace_span_name)[0])} - Request Rate"
   query = "avg(${var.request_rate_evaluation_period}):sum:trace.${var.trace_span_name}.hits{${local.request_rate_filter}}.as_rate() > ${var.request_rate_critical}"

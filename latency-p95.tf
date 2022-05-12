@@ -7,7 +7,7 @@ locals {
 
 module "latency_p95" {
   source  = "kabisa/generic-monitor/datadog"
-  version = "0.7.3"
+  version = "0.7.4"
 
   name = "APM - ${title(split(".", var.trace_span_name)[0])} - Latency(p95)"
   # using same filters as for avg latency

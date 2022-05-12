@@ -14,7 +14,7 @@ locals {
 
 module "latency" {
   source  = "kabisa/generic-monitor/datadog"
-  version = "0.7.3"
+  version = "0.7.4"
 
   name  = "APM - ${title(split(".", var.trace_span_name)[0])} - Latency"
   query = "avg(${var.latency_evaluation_period}):avg:trace.${var.trace_span_name}{${local.latency_filter}} > ${var.latency_critical}"

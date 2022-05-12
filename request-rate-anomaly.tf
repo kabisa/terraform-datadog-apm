@@ -7,7 +7,7 @@ locals {
 
 module "request_rate_anomaly" {
   source  = "kabisa/generic-monitor/datadog"
-  version = "0.7.3"
+  version = "0.7.4"
 
   name  = "APM - ${title(split(".", var.trace_span_name)[0])} - Request Rate Anomaly"
   query = "avg(${var.request_rate_anomaly_evaluation_period}):anomalies(sum:trace.${var.trace_span_name}.hits{${local.request_rate_anomaly_filter}}.as_rate(), 'agile', ${var.request_rate_anomaly_std_dev_count}, direction='both', alert_window='${var.request_rate_anomaly_trigger_window}', interval=60, count_default_zero='false', seasonality='weekly') > ${var.request_rate_anomaly_critical}"

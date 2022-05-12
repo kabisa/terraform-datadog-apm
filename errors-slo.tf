@@ -3,6 +3,14 @@ locals {
     var.error_slo_filter_override,
     local.filter_str
   )
+  error_slo_numerator = coalesce(
+    var.error_slo_numerator_override,
+    "sum:trace.${var.trace_span_name}.request.hits{${local.error_slo_filter}}.as_count() - sum:trace.${var.trace_span_name}.request.hits{${local.error_slo_filter}${var.error_slo_error_filter}}.as_count()"
+  )
+  error_slo_denominator = coalesce(
+    var.error_slo_denominator_override,
+    "sum:trace.${var.trace_span_name}.request.hits{${local.error_slo_filter}}.as_count()"
+  )
 }
 
 
@@ -19,8 +27,8 @@ resource "datadog_service_level_objective" "error_slo" {
   }
 
   query {
-    numerator   = "sum:custom_trace.hits{${local.error_slo_filter}${var.error_slo_status_ok_filter}}.as_count()"
-    denominator = "sum:custom_trace.hits{${local.error_slo_filter}${var.error_slo_status_ok_filter}}.as_count() + sum:custom_trace.hits{${local.error_slo_filter}${var.error_slo_status_error_filter}}.as_count()"
+    numerator   = local.error_slo_numerator
+    denominator = local.error_slo_denominator
   }
 
   tags = local.normalized_tags

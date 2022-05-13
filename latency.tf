@@ -6,10 +6,15 @@ locals {
     var.latency_filter_override,
     local.default_latency_filter
   )
+  latency_notification_channel = try(coalesce(
+    var.latency_notification_channel_override,
+    var.notification_channel
+  ), "")
 }
 
 module "latency" {
-  source = "git@github.com:kabisa/terraform-datadog-generic-monitor.git?ref=0.7.0"
+  source  = "kabisa/generic-monitor/datadog"
+  version = "0.7.4"
 
   name  = "APM - ${title(split(".", var.trace_span_name)[0])} - Latency"
   query = "avg(${var.latency_evaluation_period}):avg:trace.${var.trace_span_name}{${local.latency_filter}} > ${var.latency_critical}"
@@ -30,7 +35,7 @@ module "latency" {
   env                  = var.alert_env
   service              = var.service
   service_display_name = var.service_display_name
-  notification_channel = var.notification_channel
+  notification_channel = local.latency_notification_channel
   additional_tags      = var.additional_tags
   locked               = var.locked
   name_prefix          = var.name_prefix

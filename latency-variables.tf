@@ -44,3 +44,8 @@ variable "latency_priority" {
   type    = number
   default = 3
 }
+
+variable "latency_notification_channel_override" {
+  type    = string
+  default = ""
+}

@@ -128,35 +128,54 @@ avg(last_30m):anomalies(sum:trace.${var.trace_span_name}.hits{tag:xxx}.as_rate()
 
 Query:
 ```terraform
-avg(last_10m):p95:trace.${var.trace_span_name}{${local.latency_filter}} > 1.3
+percentile(last_15m):p95:trace.${var.trace_span_name}{${local.latency_filter}} > 1.3
 ```
 
-| variable                      | default  | required | description                      |
-|-------------------------------|----------|----------|----------------------------------|
-| latency_p95_enabled           | True     | No       |                                  |
-| latency_p95_warning           | 0.9      | No       |                                  |
-| latency_p95_critical          | 1.3      | No       |                                  |
-| latency_p95_evaluation_period | last_10m | No       |                                  |
-| latency_p95_note              | ""       | No       |                                  |
-| latency_p95_docs              | ""       | No       |                                  |
-| latency_p95_alerting_enabled  | True     | No       |                                  |
-| latency_p95_priority          | 3        | No       | Number from 1 (high) to 5 (low). |
+| variable                                  | default  | required | description                      |
+|-------------------------------------------|----------|----------|----------------------------------|
+| latency_p95_enabled                       | True     | No       |                                  |
+| latency_p95_warning                       | 0.9      | No       | P95 Latency in seconds.          |
+| latency_p95_critical                      | 1.3      | No       | P95 Latency warning in seconds.  |
+| latency_p95_evaluation_period             | last_15m | No       |                                  |
+| latency_p95_note                          | ""       | No       |                                  |
+| latency_p95_docs                          | ""       | No       |                                  |
+| latency_p95_alerting_enabled              | True     | No       |                                  |
+| latency_p95_priority                      | 3        | No       | Number from 1 (high) to 5 (low). |
+| latency_p95_notification_channel_override | ""       | No       |                                  |
 
 
 ## Latency Slo
 
-| variable                     | default    | required | description                                                                                          |
-|------------------------------|------------|----------|------------------------------------------------------------------------------------------------------|
-| latency_slo_enabled          | False      | No       | Note that this monitor requires custom metrics to be present. Those can unfortunately not be created with Terraform yet |
-| latency_slo_note             | ""         | No       |                                                                                                      |
-| latency_slo_docs             | ""         | No       |                                                                                                      |
-| latency_slo_filter_override  | ""         | No       |                                                                                                      |
-| latency_slo_warning          | None       | No       |                                                                                                      |
-| latency_slo_critical         | 99.9       | No       |                                                                                                      |
-| latency_slo_alerting_enabled | True       | No       |                                                                                                      |
-| latency_slo_status_ok_filter | ,status:ok | No       | Filter string to select the non-errors for the latency SLO, Dont forget to include the comma or (AND or OR) keywords |
-| latency_slo_ms_bucket        | 250        | No       | We defined several latency buckets with custom metrics based on the APM traces that come in. Our buckets are 100, 250, 500, 1000, 2500, 5000, 10000 |
-| latency_slo_timeframe        | 30d        | No       |                                                                                                      |
+Use burn rates alerts to measure how fast your error budget is being depleted relative to the time window of your SLO. For example, for a 30 day SLO if a burn rate of 1 is sustained, that means the error budget will be fully depleted in exactly 30 days, a burn rate of 2 means in exactly 15 days, etc. Therefore, you could use a burn rate alert to notify you if a burn rate of 10 is measured in the past hour. Burn rate alerts evaluate two time windows: a long window which you specify and a short window that is automatically calculated as 1/12 of your long window. The long window's purpose is to reduce alert flappiness, while the short window's purpose is to improve recovery time. If your threshold is violated in both windows, you will receive an alert.
+
+Query:
+```terraform
+burn_rate(\"${datadog_service_level_objective.latency_slo[0].id}\").over(\"${var.latency_slo_burn_rate_evaluation_period}\").long_window(\"${var.latency_slo_burn_rate_long_window}\").short_window(\"${var.latency_slo_burn_rate_short_window}\") > ${var.latency_slo_burn_rate_critical}
+```
+
+| variable                                            | default                                  | required | description                                                                                          |
+|-----------------------------------------------------|------------------------------------------|----------|------------------------------------------------------------------------------------------------------|
+| latency_slo_enabled                                 | False                                    | No       | Note that this monitor requires custom metrics to be present. Those can unfortunately not be created with Terraform yet |
+| latency_slo_note                                    | ""                                       | No       |                                                                                                      |
+| latency_slo_docs                                    | ""                                       | No       |                                                                                                      |
+| latency_slo_filter_override                         | ""                                       | No       |                                                                                                      |
+| latency_slo_warning                                 | None                                     | No       |                                                                                                      |
+| latency_slo_critical                                | 99.9                                     | No       |                                                                                                      |
+| latency_slo_alerting_enabled                        | True                                     | No       |                                                                                                      |
+| latency_slo_status_ok_filter                        | ,status:ok                               | No       | Filter string to select the non-errors for the latency SLO, Dont forget to include the comma or (AND or OR) keywords |
+| latency_slo_ms_bucket                               | 250                                      | No       | We defined several latency buckets with custom metrics based on the APM traces that come in. Our buckets are 100, 250, 500, 1000, 2500, 5000, 10000 |
+| latency_slo_timeframe                               | 30d                                      | No       |                                                                                                      |
+| latency_slo_burn_rate_priority                      | 3                                        | No       | Number from 1 (high) to 5 (low).                                                                     |
+| latency_slo_burn_rate_warning                       | None                                     | No       |                                                                                                      |
+| latency_slo_burn_rate_critical                      | 10                                       | No       |                                                                                                      |
+| latency_slo_burn_rate_note                          | ""                                       | No       |                                                                                                      |
+| latency_slo_burn_rate_docs                          | Use burn rates alerts to measure how fast your error budget is being depleted relative to the time window of your SLO. For example, for a 30 day SLO if a burn rate of 1 is sustained, that means the error budget will be fully depleted in exactly 30 days, a burn rate of 2 means in exactly 15 days, etc. Therefore, you could use a burn rate alert to notify you if a burn rate of 10 is measured in the past hour. Burn rate alerts evaluate two time windows: a long window which you specify and a short window that is automatically calculated as 1/12 of your long window. The long window's purpose is to reduce alert flappiness, while the short window's purpose is to improve recovery time. If your threshold is violated in both windows, you will receive an alert. | No       |                                                                                                      |
+| latency_slo_burn_rate_evaluation_period             | 30d                                      | No       |                                                                                                      |
+| latency_slo_burn_rate_short_window                  | 5m                                       | No       |                                                                                                      |
+| latency_slo_burn_rate_long_window                   | 1h                                       | No       |                                                                                                      |
+| latency_slo_burn_rate_notification_channel_override | ""                                       | No       |                                                                                                      |
+| latency_slo_burn_rate_enabled                       | True                                     | No       |                                                                                                      |
+| latency_slo_burn_rate_alerting_enabled              | True                                     | No       |                                                                                                      |
 
 
 ## Apdex
@@ -183,18 +202,37 @@ avg(last_10m):avg:trace.${var.trace_span_name}.apdex.by.service{tag:xxx} < 0.8
 
 ## Errors Slo
 
-| variable                      | default       | required | description                                                                                          |
-|-------------------------------|---------------|----------|------------------------------------------------------------------------------------------------------|
-| error_slo_enabled             | True          | No       |                                                                                                      |
-| error_slo_note                | ""            | No       |                                                                                                      |
-| error_slo_docs                | ""            | No       |                                                                                                      |
-| error_slo_filter_override     | ""            | No       |                                                                                                      |
-| error_slo_warning             | None          | No       |                                                                                                      |
-| error_slo_critical            | 99.9          | No       |                                                                                                      |
-| error_slo_alerting_enabled    | True          | No       |                                                                                                      |
-| error_slo_status_ok_filter    | ,status:ok    | No       | Filter string to select the non-errors for the SLO, Dont forget to include the comma or (AND or OR) keywords |
-| error_slo_status_error_filter | ,status:error | No       | Filter string to select the non-errors for the SLO, Dont forget to include the comma or (AND or OR) keywords |
-| error_slo_timeframe           | 30d           | No       |                                                                                                      |
+Use burn rates alerts to measure how fast your error budget is being depleted relative to the time window of your SLO. For example, for a 30 day SLO if a burn rate of 1 is sustained, that means the error budget will be fully depleted in exactly 30 days, a burn rate of 2 means in exactly 15 days, etc. Therefore, you could use a burn rate alert to notify you if a burn rate of 10 is measured in the past hour. Burn rate alerts evaluate two time windows: a long window which you specify and a short window that is automatically calculated as 1/12 of your long window. The long window's purpose is to reduce alert flappiness, while the short window's purpose is to improve recovery time. If your threshold is violated in both windows, you will receive an alert.
+
+Query:
+```terraform
+burn_rate(\"${datadog_service_level_objective.error_slo[0].id}\").over(\"${var.error_slo_burn_rate_evaluation_period}\").long_window(\"${var.error_slo_burn_rate_long_window}\").short_window(\"${var.error_slo_burn_rate_short_window}\") > ${var.error_slo_burn_rate_critical}
+```
+
+| variable                                          | default                                  | required | description                                                                                          |
+|---------------------------------------------------|------------------------------------------|----------|------------------------------------------------------------------------------------------------------|
+| error_slo_enabled                                 | True                                     | No       |                                                                                                      |
+| error_slo_note                                    | ""                                       | No       |                                                                                                      |
+| error_slo_docs                                    | ""                                       | No       |                                                                                                      |
+| error_slo_filter_override                         | ""                                       | No       |                                                                                                      |
+| error_slo_warning                                 | None                                     | No       |                                                                                                      |
+| error_slo_critical                                | 99.9                                     | No       |                                                                                                      |
+| error_slo_alerting_enabled                        | True                                     | No       |                                                                                                      |
+| error_slo_error_filter                            | ,status:error                            | No       | Filter string to select the non-errors for the SLO, Dont forget to include the comma or (AND or OR) keywords |
+| error_slo_timeframe                               | 30d                                      | No       |                                                                                                      |
+| error_slo_numerator_override                      | ""                                       | No       |                                                                                                      |
+| error_slo_denominator_override                    | ""                                       | No       |                                                                                                      |
+| error_slo_burn_rate_notification_channel_override | ""                                       | No       |                                                                                                      |
+| error_slo_burn_rate_enabled                       | True                                     | No       |                                                                                                      |
+| error_slo_burn_rate_alerting_enabled              | True                                     | No       |                                                                                                      |
+| error_slo_burn_rate_priority                      | 3                                        | No       | Number from 1 (high) to 5 (low).                                                                     |
+| error_slo_burn_rate_warning                       | None                                     | No       |                                                                                                      |
+| error_slo_burn_rate_critical                      | 10                                       | No       |                                                                                                      |
+| error_slo_burn_rate_note                          | ""                                       | No       |                                                                                                      |
+| error_slo_burn_rate_docs                          | Use burn rates alerts to measure how fast your error budget is being depleted relative to the time window of your SLO. For example, for a 30 day SLO if a burn rate of 1 is sustained, that means the error budget will be fully depleted in exactly 30 days, a burn rate of 2 means in exactly 15 days, etc. Therefore, you could use a burn rate alert to notify you if a burn rate of 10 is measured in the past hour. Burn rate alerts evaluate two time windows: a long window which you specify and a short window that is automatically calculated as 1/12 of your long window. The long window's purpose is to reduce alert flappiness, while the short window's purpose is to improve recovery time. If your threshold is violated in both windows, you will receive an alert. | No       |                                                                                                      |
+| error_slo_burn_rate_evaluation_period             | 30d                                      | No       |                                                                                                      |
+| error_slo_burn_rate_short_window                  | 5m                                       | No       |                                                                                                      |
+| error_slo_burn_rate_long_window                   | 1h                                       | No       |                                                                                                      |
 
 
 ## Latency
@@ -204,17 +242,18 @@ Query:
 avg(last_10m):avg:trace.${var.trace_span_name}{tag:xxx} > 0.5
 ```
 
-| variable                  | default  | required | description                      |
-|---------------------------|----------|----------|----------------------------------|
-| latency_enabled           | True     | No       |                                  |
-| latency_warning           | 0.3      | No       |                                  |
-| latency_critical          | 0.5      | No       |                                  |
-| latency_evaluation_period | last_10m | No       |                                  |
-| latency_note              | ""       | No       |                                  |
-| latency_docs              | ""       | No       |                                  |
-| latency_filter_override   | ""       | No       |                                  |
-| latency_alerting_enabled  | True     | No       |                                  |
-| latency_priority          | 3        | No       | Number from 1 (high) to 5 (low). |
+| variable                              | default  | required | description                      |
+|---------------------------------------|----------|----------|----------------------------------|
+| latency_enabled                       | True     | No       |                                  |
+| latency_warning                       | 0.3      | No       |                                  |
+| latency_critical                      | 0.5      | No       |                                  |
+| latency_evaluation_period             | last_10m | No       |                                  |
+| latency_note                          | ""       | No       |                                  |
+| latency_docs                          | ""       | No       |                                  |
+| latency_filter_override               | ""       | No       |                                  |
+| latency_alerting_enabled              | True     | No       |                                  |
+| latency_priority                      | 3        | No       | Number from 1 (high) to 5 (low). |
+| latency_notification_channel_override | ""       | No       |                                  |
 
 
 ## Module Variables

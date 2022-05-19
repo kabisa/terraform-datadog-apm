@@ -15,8 +15,9 @@ locals {
     var.error_slo_burn_rate_notification_channel_override,
     var.notification_channel
   ), "")
+  error_slo_burn_rate_enabled = var.error_slo_enabled && var.error_slo_burn_rate_enabled
+  error_slo_id = local.error_slo_burn_rate_enabled ? datadog_service_level_objective.error_slo[0].id : ""
 }
-
 
 resource "datadog_service_level_objective" "error_slo" {
   count       = var.error_slo_enabled ? 1 : 0
@@ -43,7 +44,7 @@ module "error_slo_burn_rate" {
   version = "0.7.4"
 
   name  = "APM - Error SLO - Burn Rate"
-  query = "burn_rate(\"${datadog_service_level_objective.error_slo[0].id}\").over(\"${var.error_slo_burn_rate_evaluation_period}\").long_window(\"${var.error_slo_burn_rate_long_window}\").short_window(\"${var.error_slo_burn_rate_short_window}\") > ${var.error_slo_burn_rate_critical}"
+  query = "burn_rate(\"${local.error_slo_id}\").over(\"${var.error_slo_burn_rate_evaluation_period}\").long_window(\"${var.error_slo_burn_rate_long_window}\").short_window(\"${var.error_slo_burn_rate_short_window}\") > ${var.error_slo_burn_rate_critical}"
 
 
   alert_message    = "${local.service_display_name} service is burning through its Error Budget. The percentage of 5XX status codes is {{threshold}}x higher than expected"

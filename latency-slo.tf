@@ -35,7 +35,7 @@ resource "datadog_service_level_objective" "latency_slo" {
 
 module "latency_slo_burn_rate" {
   source  = "kabisa/generic-monitor/datadog"
-  version = "0.7.4"
+  version = "0.7.5"
 
   name  = "APM - Latency SLO - Burn Rate"
   query = "burn_rate(\"${local.latency_slo_id}\").over(\"${var.latency_slo_burn_rate_evaluation_period}\").long_window(\"${var.latency_slo_burn_rate_long_window}\").short_window(\"${var.latency_slo_burn_rate_short_window}\") > ${var.latency_slo_burn_rate_critical}"

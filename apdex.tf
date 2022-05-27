@@ -7,7 +7,7 @@ locals {
 
 module "apdex" {
   source  = "kabisa/generic-monitor/datadog"
-  version = "0.7.4"
+  version = "0.7.5"
 
   name  = "APM - ${title(split(".", var.trace_span_name)[0])} - Apdex"
   query = "avg(${var.apdex_evaluation_period}):avg:trace.${var.trace_span_name}.apdex.by.service{${local.apdex_filter}} < ${var.apdex_critical}"

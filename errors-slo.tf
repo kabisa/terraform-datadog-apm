@@ -16,7 +16,7 @@ locals {
     var.notification_channel
   ), "")
   error_slo_burn_rate_enabled = var.error_slo_enabled && var.error_slo_burn_rate_enabled
-  error_slo_id = local.error_slo_burn_rate_enabled ? datadog_service_level_objective.error_slo[0].id : ""
+  error_slo_id                = local.error_slo_burn_rate_enabled ? datadog_service_level_objective.error_slo[0].id : ""
 }
 
 resource "datadog_service_level_objective" "error_slo" {
@@ -61,7 +61,7 @@ module "error_slo_burn_rate" {
   note               = var.error_slo_burn_rate_note
 
   # module level vars
-  env                  = var.alert_env
+  env                  = var.env
   service              = var.service
   service_display_name = var.service_display_name
   notification_channel = local.error_slo_burn_rate_notification_channel

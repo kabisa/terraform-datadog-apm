@@ -26,7 +26,7 @@ module "latency_p95" {
   note               = var.latency_p95_note
 
   # module level vars
-  env                  = var.alert_env
+  env                  = var.env
   service              = var.service
   service_display_name = var.service_display_name
   notification_channel = local.latency_p95_notification_channel

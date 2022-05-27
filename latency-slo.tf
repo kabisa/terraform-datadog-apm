@@ -7,6 +7,8 @@ locals {
     var.latency_slo_burn_rate_notification_channel_override,
     var.notification_channel
   ), "")
+  latency_slo_burn_rate_enabled = var.latency_slo_enabled && var.latency_slo_burn_rate_enabled
+  latency_slo_id = local.latency_slo_burn_rate_enabled ? datadog_service_level_objective.latency_slo[0].id : ""
 }
 
 
@@ -36,7 +38,7 @@ module "latency_slo_burn_rate" {
   version = "0.7.4"
 
   name  = "APM - Latency SLO - Burn Rate"
-  query = "burn_rate(\"${datadog_service_level_objective.latency_slo[0].id}\").over(\"${var.latency_slo_burn_rate_evaluation_period}\").long_window(\"${var.latency_slo_burn_rate_long_window}\").short_window(\"${var.latency_slo_burn_rate_short_window}\") > ${var.latency_slo_burn_rate_critical}"
+  query = "burn_rate(\"${local.latency_slo_id}\").over(\"${var.latency_slo_burn_rate_evaluation_period}\").long_window(\"${var.latency_slo_burn_rate_long_window}\").short_window(\"${var.latency_slo_burn_rate_short_window}\") > ${var.latency_slo_burn_rate_critical}"
 
 
   alert_message    = "${local.service_display_name} service is burning through its Latency Budget. The percentage of slow requests is {{threshold}}x higher than expected"
@@ -44,7 +46,7 @@ module "latency_slo_burn_rate" {
   type             = "slo alert"
 
   # monitor level vars
-  enabled            = var.latency_slo_enabled && var.latency_slo_burn_rate_enabled
+  enabled            = local.latency_slo_burn_rate_enabled
   alerting_enabled   = var.latency_slo_burn_rate_alerting_enabled
   warning_threshold  = var.latency_slo_burn_rate_warning
   critical_threshold = var.latency_slo_burn_rate_critical

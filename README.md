@@ -150,7 +150,7 @@ Use burn rates alerts to measure how fast your error budget is being depleted re
 
 Query:
 ```terraform
-burn_rate(\"${datadog_service_level_objective.latency_slo[0].id}\").over(\"${var.latency_slo_burn_rate_evaluation_period}\").long_window(\"${var.latency_slo_burn_rate_long_window}\").short_window(\"${var.latency_slo_burn_rate_short_window}\") > ${var.latency_slo_burn_rate_critical}
+burn_rate(\"${local.latency_slo_id}\").over(\"${var.latency_slo_burn_rate_evaluation_period}\").long_window(\"${var.latency_slo_burn_rate_long_window}\").short_window(\"${var.latency_slo_burn_rate_short_window}\") > ${var.latency_slo_burn_rate_critical}
 ```
 
 | variable                                            | default                                  | required | description                                                                                          |
@@ -206,7 +206,7 @@ Use burn rates alerts to measure how fast your error budget is being depleted re
 
 Query:
 ```terraform
-burn_rate(\"${datadog_service_level_objective.error_slo[0].id}\").over(\"${var.error_slo_burn_rate_evaluation_period}\").long_window(\"${var.error_slo_burn_rate_long_window}\").short_window(\"${var.error_slo_burn_rate_short_window}\") > ${var.error_slo_burn_rate_critical}
+burn_rate(\"${local.error_slo_id}\").over(\"${var.error_slo_burn_rate_evaluation_period}\").long_window(\"${var.error_slo_burn_rate_long_window}\").short_window(\"${var.error_slo_burn_rate_short_window}\") > ${var.error_slo_burn_rate_critical}
 ```
 
 | variable                                          | default                                  | required | description                                                                                          |
@@ -261,7 +261,6 @@ avg(last_10m):avg:trace.${var.trace_span_name}{tag:xxx} > 0.5
 | variable                        | default      | required | description                                                                                          |
 |---------------------------------|--------------|----------|------------------------------------------------------------------------------------------------------|
 | env                             |              | Yes      |                                                                                                      |
-| alert_env                       |              | Yes      |                                                                                                      |
 | service                         |              | Yes      |                                                                                                      |
 | service_display_name            | None         | No       |                                                                                                      |
 | trace_span_name                 | http.request | No       | Traces contain a span name. Example:

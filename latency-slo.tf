@@ -8,7 +8,7 @@ locals {
     var.notification_channel
   ), "")
   latency_slo_burn_rate_enabled = var.latency_slo_enabled && var.latency_slo_burn_rate_enabled
-  latency_slo_id = local.latency_slo_burn_rate_enabled ? datadog_service_level_objective.latency_slo[0].id : ""
+  latency_slo_id                = local.latency_slo_burn_rate_enabled ? datadog_service_level_objective.latency_slo[0].id : ""
 }
 
 
@@ -55,7 +55,7 @@ module "latency_slo_burn_rate" {
   note               = var.latency_slo_burn_rate_note
 
   # module level vars
-  env                  = var.alert_env
+  env                  = var.env
   service              = var.service
   service_display_name = var.service_display_name
   notification_channel = local.latency_slo_burn_rate_notification_channel

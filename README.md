@@ -250,7 +250,7 @@ avg(last_10m):avg:trace.${var.trace_span_name}{tag:xxx} > 0.5
 
 | variable                              | default  | required | description                                 |
 |---------------------------------------|----------|----------|---------------------------------------------|
-| latency_enabled                       | True     | No       |                                             |
+| latency_enabled                       | False    | No       |                                             |
 | latency_warning                       | 0.3      | No       |                                             |
 | latency_critical                      | 0.5      | No       | Latency threshold in seconds for APM traces |
 | latency_evaluation_period             | last_10m | No       |                                             |

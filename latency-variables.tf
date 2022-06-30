@@ -1,6 +1,6 @@
 variable "latency_enabled" {
   type    = bool
-  default = true
+  default = false
 }
 
 variable "latency_warning" {

@@ -9,6 +9,9 @@ locals {
   ), "")
   latency_slo_burn_rate_enabled = var.latency_slo_enabled && var.latency_slo_burn_rate_enabled
   latency_slo_id                = local.latency_slo_burn_rate_enabled ? datadog_service_level_objective.latency_slo[0].id : ""
+
+  latency_slo_numerator   = coalesce(var.latency_slo_custom_numerator, "count(v: v<${var.latency_slo_latency_threshold}):trace.${var.trace_span_name}{${local.latency_slo_filter}}")
+  latency_slo_denominator = coalesce(var.latency_slo_custom_denominator, "count:trace.${var.trace_span_name}{${local.latency_slo_filter}}")
 }
 
 
@@ -25,8 +28,8 @@ resource "datadog_service_level_objective" "latency_slo" {
   }
 
   query {
-    numerator   = "sum:custom_trace.lt.${var.latency_slo_ms_bucket}ms.count{${local.latency_slo_filter}${var.latency_slo_status_ok_filter}}.as_count()"
-    denominator = "sum:custom_trace.hits{${local.latency_slo_filter}${var.latency_slo_status_ok_filter}}.as_count()"
+    numerator   = local.latency_slo_numerator
+    denominator = local.latency_slo_denominator
   }
 
   tags = local.normalized_tags

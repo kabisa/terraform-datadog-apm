@@ -5,11 +5,16 @@
 
 # Terraform module for Datadog Apm
 
-This module adds error and latency monitoring for APM data.
-It also includes SLO's for errors and latency but this requires some manual actions first.
-Datadog has a feature to generated metrics based on APM data.
-Unfortunately this is not a feature you can configure with Terraform.
-You'll have to create these metrics by hand unfortunately :( 
+This module provides SLO's and other alerts based on APM data.
+Note that it's this module's opinion that you should prefer to alert on SLO burn rates in stead of latency thresholds.
+
+There is also some backwards compatibility if you want to use generated metrics for your SLO's
+
+## OLD SOLUTION FOR SLO's
+
+Before datadog supported latency SLO's we used generated metrics to base our SLO's on.
+Creating the generated metrics is not something you can do with Terraform.
+You'll have to create these metrics by hand if you need/want this.
 
 In Datadog go to APM -> Setup and Configuration -> Generate Metrics -> New Metric
 
@@ -88,7 +93,7 @@ avg(last_10m):100 * (sum:trace.${var.trace_span_name}.errors{tag:xxx}.as_rate() 
 
 | variable                           | default  | required | description                      |
 |------------------------------------|----------|----------|----------------------------------|
-| error_percentage_enabled           | True     | No       |                                  |
+| error_percentage_enabled           | False    | No       | We prefer to alert on SLO's      |
 | error_percentage_warning           | 0.01     | No       |                                  |
 | error_percentage_critical          | 0.05     | No       |                                  |
 | error_percentage_evaluation_period | last_10m | No       |                                  |
@@ -133,7 +138,7 @@ percentile(last_15m):p95:trace.${var.trace_span_name}{${local.latency_filter}} >
 
 | variable                                  | default  | required | description                      |
 |-------------------------------------------|----------|----------|----------------------------------|
-| latency_p95_enabled                       | True     | No       |                                  |
+| latency_p95_enabled                       | False    | No       | We prefer to alert on SLO's      |
 | latency_p95_warning                       | 0.9      | No       | P95 Latency in seconds.          |
 | latency_p95_critical                      | 1.3      | No       | P95 Latency warning in seconds.  |
 | latency_p95_evaluation_period             | last_15m | No       |                                  |
@@ -155,15 +160,14 @@ burn_rate(\"${local.latency_slo_id}\").over(\"${var.latency_slo_burn_rate_evalua
 
 | variable                                            | default                                  | required | description                                                                                          |
 |-----------------------------------------------------|------------------------------------------|----------|------------------------------------------------------------------------------------------------------|
-| latency_slo_enabled                                 | False                                    | No       | Note that this monitor requires custom metrics to be present. Those can unfortunately not be created with Terraform yet |
+| latency_slo_enabled                                 | True                                     | No       | Note that this monitor requires custom metrics to be present. Those can unfortunately not be created with Terraform yet |
 | latency_slo_note                                    | ""                                       | No       |                                                                                                      |
 | latency_slo_docs                                    | ""                                       | No       |                                                                                                      |
 | latency_slo_filter_override                         | ""                                       | No       |                                                                                                      |
 | latency_slo_warning                                 | None                                     | No       |                                                                                                      |
 | latency_slo_critical                                | 99.9                                     | No       |                                                                                                      |
+| latency_slo_latency_threshold                       | 1                                        | No       | SLO latency threshold in seconds for APM traces                                                      |
 | latency_slo_alerting_enabled                        | True                                     | No       |                                                                                                      |
-| latency_slo_status_ok_filter                        | ,status:ok                               | No       | Filter string to select the non-errors for the latency SLO, Dont forget to include the comma or (AND or OR) keywords |
-| latency_slo_ms_bucket                               | 250                                      | No       | We defined several latency buckets with custom metrics based on the APM traces that come in. Our buckets are 100, 250, 500, 1000, 2500, 5000, 10000 |
 | latency_slo_timeframe                               | 30d                                      | No       |                                                                                                      |
 | latency_slo_burn_rate_priority                      | 3                                        | No       | Number from 1 (high) to 5 (low).                                                                     |
 | latency_slo_burn_rate_warning                       | None                                     | No       |                                                                                                      |
@@ -176,6 +180,8 @@ burn_rate(\"${local.latency_slo_id}\").over(\"${var.latency_slo_burn_rate_evalua
 | latency_slo_burn_rate_notification_channel_override | ""                                       | No       |                                                                                                      |
 | latency_slo_burn_rate_enabled                       | True                                     | No       |                                                                                                      |
 | latency_slo_burn_rate_alerting_enabled              | True                                     | No       |                                                                                                      |
+| latency_slo_custom_numerator                        | ""                                       | No       |                                                                                                      |
+| latency_slo_custom_denominator                      | ""                                       | No       |                                                                                                      |
 
 
 ## Apdex
@@ -242,18 +248,18 @@ Query:
 avg(last_10m):avg:trace.${var.trace_span_name}{tag:xxx} > 0.5
 ```
 
-| variable                              | default  | required | description                      |
-|---------------------------------------|----------|----------|----------------------------------|
-| latency_enabled                       | True     | No       |                                  |
-| latency_warning                       | 0.3      | No       |                                  |
-| latency_critical                      | 0.5      | No       |                                  |
-| latency_evaluation_period             | last_10m | No       |                                  |
-| latency_note                          | ""       | No       |                                  |
-| latency_docs                          | ""       | No       |                                  |
-| latency_filter_override               | ""       | No       |                                  |
-| latency_alerting_enabled              | True     | No       |                                  |
-| latency_priority                      | 3        | No       | Number from 1 (high) to 5 (low). |
-| latency_notification_channel_override | ""       | No       |                                  |
+| variable                              | default  | required | description                                 |
+|---------------------------------------|----------|----------|---------------------------------------------|
+| latency_enabled                       | False    | No       |                                             |
+| latency_warning                       | 0.3      | No       |                                             |
+| latency_critical                      | 0.5      | No       | Latency threshold in seconds for APM traces |
+| latency_evaluation_period             | last_10m | No       |                                             |
+| latency_note                          | ""       | No       |                                             |
+| latency_docs                          | ""       | No       |                                             |
+| latency_filter_override               | ""       | No       |                                             |
+| latency_alerting_enabled              | True     | No       |                                             |
+| latency_priority                      | 3        | No       | Number from 1 (high) to 5 (low).            |
+| latency_notification_channel_override | ""       | No       |                                             |
 
 
 ## Module Variables

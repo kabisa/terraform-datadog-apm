@@ -1,6 +1,6 @@
 variable "latency_slo_enabled" {
   type        = bool
-  default     = false
+  default     = true
   description = "Note that this monitor requires custom metrics to be present. Those can unfortunately not be created with Terraform yet"
 }
 
@@ -29,21 +29,15 @@ variable "latency_slo_critical" {
   default = 99.9
 }
 
+variable "latency_slo_latency_threshold" {
+  description = "SLO latency threshold in seconds for APM traces"
+  type        = number
+  default     = 1
+}
+
 variable "latency_slo_alerting_enabled" {
   type    = bool
   default = true
-}
-
-variable "latency_slo_status_ok_filter" {
-  type        = string
-  description = "Filter string to select the non-errors for the latency SLO, Dont forget to include the comma or (AND or OR) keywords"
-  default     = ",status:ok"
-}
-
-variable "latency_slo_ms_bucket" {
-  type        = number
-  default     = 250
-  description = "We defined several latency buckets with custom metrics based on the APM traces that come in. Our buckets are 100, 250, 500, 1000, 2500, 5000, 10000"
 }
 
 variable "latency_slo_timeframe" {
@@ -110,4 +104,14 @@ variable "latency_slo_burn_rate_enabled" {
 variable "latency_slo_burn_rate_alerting_enabled" {
   type    = bool
   default = true
+}
+
+variable "latency_slo_custom_numerator" {
+  type    = string
+  default = ""
+}
+
+variable "latency_slo_custom_denominator" {
+  type    = string
+  default = ""
 }

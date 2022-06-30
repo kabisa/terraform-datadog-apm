@@ -1,8 +1,13 @@
-This module adds error and latency monitoring for APM data.
-It also includes SLO's for errors and latency but this requires some manual actions first.
-Datadog has a feature to generated metrics based on APM data.
-Unfortunately this is not a feature you can configure with Terraform.
-You'll have to create these metrics by hand unfortunately :( 
+This module provides SLO's and other alerts based on APM data.
+Note that it's this module's opinion that you should prefer to alert on SLO burn rates in stead of latency thresholds.
+
+There is also some backwards compatibility if you want to use generated metrics for your SLO's
+
+## OLD SOLUTION FOR SLO's
+
+Before datadog supported latency SLO's we used generated metrics to base our SLO's on.
+Creating the generated metrics is not something you can do with Terraform.
+You'll have to create these metrics by hand if you need/want this.
 
 In Datadog go to APM -> Setup and Configuration -> Generate Metrics -> New Metric
 

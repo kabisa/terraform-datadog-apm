@@ -9,8 +9,9 @@ variable "latency_warning" {
 }
 
 variable "latency_critical" {
-  type    = number
-  default = 0.5
+  description = "Latency threshold in seconds for APM traces"
+  type        = number
+  default     = 0.5
 }
 
 variable "latency_evaluation_period" {

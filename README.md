@@ -161,9 +161,8 @@ burn_rate(\"${local.latency_slo_id}\").over(\"${var.latency_slo_burn_rate_evalua
 | latency_slo_filter_override                         | ""                                       | No       |                                                                                                      |
 | latency_slo_warning                                 | None                                     | No       |                                                                                                      |
 | latency_slo_critical                                | 99.9                                     | No       |                                                                                                      |
+| latency_slo_latency_threshold                       | 1                                        | No       | SLO latency threshold in seconds for APM traces                                                      |
 | latency_slo_alerting_enabled                        | True                                     | No       |                                                                                                      |
-| latency_slo_status_ok_filter                        | ,status:ok                               | No       | Filter string to select the non-errors for the latency SLO, Dont forget to include the comma or (AND or OR) keywords |
-| latency_slo_ms_bucket                               | 250                                      | No       | We defined several latency buckets with custom metrics based on the APM traces that come in. Our buckets are 100, 250, 500, 1000, 2500, 5000, 10000 |
 | latency_slo_timeframe                               | 30d                                      | No       |                                                                                                      |
 | latency_slo_burn_rate_priority                      | 3                                        | No       | Number from 1 (high) to 5 (low).                                                                     |
 | latency_slo_burn_rate_warning                       | None                                     | No       |                                                                                                      |
@@ -176,6 +175,8 @@ burn_rate(\"${local.latency_slo_id}\").over(\"${var.latency_slo_burn_rate_evalua
 | latency_slo_burn_rate_notification_channel_override | ""                                       | No       |                                                                                                      |
 | latency_slo_burn_rate_enabled                       | True                                     | No       |                                                                                                      |
 | latency_slo_burn_rate_alerting_enabled              | True                                     | No       |                                                                                                      |
+| latency_slo_custom_numerator                        | ""                                       | No       |                                                                                                      |
+| latency_slo_custom_denominator                      | ""                                       | No       |                                                                                                      |
 
 
 ## Apdex
@@ -242,18 +243,18 @@ Query:
 avg(last_10m):avg:trace.${var.trace_span_name}{tag:xxx} > 0.5
 ```
 
-| variable                              | default  | required | description                      |
-|---------------------------------------|----------|----------|----------------------------------|
-| latency_enabled                       | True     | No       |                                  |
-| latency_warning                       | 0.3      | No       |                                  |
-| latency_critical                      | 0.5      | No       |                                  |
-| latency_evaluation_period             | last_10m | No       |                                  |
-| latency_note                          | ""       | No       |                                  |
-| latency_docs                          | ""       | No       |                                  |
-| latency_filter_override               | ""       | No       |                                  |
-| latency_alerting_enabled              | True     | No       |                                  |
-| latency_priority                      | 3        | No       | Number from 1 (high) to 5 (low). |
-| latency_notification_channel_override | ""       | No       |                                  |
+| variable                              | default  | required | description                                 |
+|---------------------------------------|----------|----------|---------------------------------------------|
+| latency_enabled                       | True     | No       |                                             |
+| latency_warning                       | 0.3      | No       |                                             |
+| latency_critical                      | 0.5      | No       | Latency threshold in seconds for APM traces |
+| latency_evaluation_period             | last_10m | No       |                                             |
+| latency_note                          | ""       | No       |                                             |
+| latency_docs                          | ""       | No       |                                             |
+| latency_filter_override               | ""       | No       |                                             |
+| latency_alerting_enabled              | True     | No       |                                             |
+| latency_priority                      | 3        | No       | Number from 1 (high) to 5 (low).            |
+| latency_notification_channel_override | ""       | No       |                                             |
 
 
 ## Module Variables

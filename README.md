@@ -88,7 +88,7 @@ avg(last_10m):100 * (sum:trace.${var.trace_span_name}.errors{tag:xxx}.as_rate() 
 
 | variable                           | default  | required | description                      |
 |------------------------------------|----------|----------|----------------------------------|
-| error_percentage_enabled           | True     | No       |                                  |
+| error_percentage_enabled           | False    | No       | We prefer to alert on SLO's      |
 | error_percentage_warning           | 0.01     | No       |                                  |
 | error_percentage_critical          | 0.05     | No       |                                  |
 | error_percentage_evaluation_period | last_10m | No       |                                  |
@@ -133,7 +133,7 @@ percentile(last_15m):p95:trace.${var.trace_span_name}{${local.latency_filter}} >
 
 | variable                                  | default  | required | description                      |
 |-------------------------------------------|----------|----------|----------------------------------|
-| latency_p95_enabled                       | True     | No       |                                  |
+| latency_p95_enabled                       | False    | No       | We prefer to alert on SLO's      |
 | latency_p95_warning                       | 0.9      | No       | P95 Latency in seconds.          |
 | latency_p95_critical                      | 1.3      | No       | P95 Latency warning in seconds.  |
 | latency_p95_evaluation_period             | last_15m | No       |                                  |
@@ -155,7 +155,7 @@ burn_rate(\"${local.latency_slo_id}\").over(\"${var.latency_slo_burn_rate_evalua
 
 | variable                                            | default                                  | required | description                                                                                          |
 |-----------------------------------------------------|------------------------------------------|----------|------------------------------------------------------------------------------------------------------|
-| latency_slo_enabled                                 | False                                    | No       | Note that this monitor requires custom metrics to be present. Those can unfortunately not be created with Terraform yet |
+| latency_slo_enabled                                 | True                                     | No       | Note that this monitor requires custom metrics to be present. Those can unfortunately not be created with Terraform yet |
 | latency_slo_note                                    | ""                                       | No       |                                                                                                      |
 | latency_slo_docs                                    | ""                                       | No       |                                                                                                      |
 | latency_slo_filter_override                         | ""                                       | No       |                                                                                                      |

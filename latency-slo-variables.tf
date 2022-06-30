@@ -1,6 +1,6 @@
 variable "latency_slo_enabled" {
   type        = bool
-  default     = false
+  default     = true
   description = "Note that this monitor requires custom metrics to be present. Those can unfortunately not be created with Terraform yet"
 }
 

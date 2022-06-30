@@ -1,6 +1,7 @@
 variable "error_percentage_enabled" {
-  type    = bool
-  default = true
+  description = "We prefer to alert on SLO's"
+  type        = bool
+  default     = false
 }
 
 variable "error_percentage_warning" {

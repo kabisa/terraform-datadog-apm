@@ -1,6 +1,7 @@
 variable "latency_p95_enabled" {
-  type    = bool
-  default = true
+  description = "We prefer to alert on SLO's"
+  type        = bool
+  default     = false
 }
 
 variable "latency_p95_warning" {

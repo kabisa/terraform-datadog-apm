@@ -7,7 +7,7 @@ locals {
 
 module "error_percentage" {
   source  = "kabisa/generic-monitor/datadog"
-  version = "0.7.5"
+  version = "1.0.0"
 
   name             = "APM - ${title(split(".", var.trace_span_name)[0])} - Error Percentage"
   query            = "avg(${var.error_percentage_evaluation_period}):100 * (sum:trace.${var.trace_span_name}.errors{${local.error_percentage_filter}}.as_rate() / sum:trace.${var.trace_span_name}.hits{${local.error_percentage_filter}}.as_rate() ) > ${var.error_percentage_critical}"
